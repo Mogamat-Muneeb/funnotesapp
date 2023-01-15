@@ -24,7 +24,7 @@ function Navbar( props ){
                 )}
               </span>
               <span className="mt-1 font-semibold text-white">
-                {props.verifiedUser ? `${username}'s Note` : "Fun Notes"}
+                {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
               </span>
             </div>
             <div className="absolute ml-3 right-10">

@@ -8,11 +8,11 @@ import Modal from "../Modal/Modal";
  function Notes() {
     auth.languageCode = "it";
     const provider = new GoogleAuthProvider();
-    let [verifiedUser, setVerifiedUser] = useState(null);
-    let store = JSON.parse(localStorage.getItem("Todo"));
-    let [show, setShow] = useState(false);
-    let [dark, setDark] = useState(false);
-    let [listItems, setListItems] = useState(() => {
+    const [verifiedUser, setVerifiedUser] = useState(null);
+    const store = JSON.parse(localStorage.getItem("Todo"));
+    const [show, setShow] = useState(false);
+    const [dark, setDark] = useState(false);
+    const [listItems, setListItems] = useState(() => {
       if (store) {
         return store;
       } else {
@@ -22,24 +22,13 @@ import Modal from "../Modal/Modal";
     useEffect(() => {
         localStorage.setItem("Todo", JSON.stringify(listItems));
       }, [listItems]);
-    //   let signInWithGoogle = () => {
-    //     signInWithPopup(auth, provider)
-    //       .then((result) => {
-    //         const user = result.user;
-    //         setVerifiedUser(user);
-    //         console.log(user);
-    //       })
-    //       .catch((error) => {
-    //         const errorCode = error.code;
-    //         console.log(error, errorCode);
-    //       });
-    //   };
-    let handleChange = (e) => {
+
+    const handleChange = (e) => {
         setListItems([...listItems, e]);
         setShow(!show);
       };
-      let closeToggle = () => setShow(!show);
-      let darkMode = () => {
+      const closeToggle = () => setShow(!show);
+      const darkMode = () => {
         setDark((prev) => !prev);
       };
   return (
