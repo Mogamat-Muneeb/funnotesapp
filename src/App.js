@@ -19,8 +19,10 @@ function App() {
   let [dark, setDark] = useState(false);
   // const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   let [show, setShow] = useState(false);
-  let [verifiedUser, setVerifiedUser] = useState(null);
+  // let [verifiedUser, setVerifiedUser] = useState(null);
   let store = JSON.parse(localStorage.getItem("Todo"));
+  let storedUser = JSON.parse(localStorage.getItem("user"));
+let [verifiedUser, setVerifiedUser] = useState(storedUser);
   let [listItems, setListItems] = useState(() => {
     if (store) {
       return store;
@@ -34,6 +36,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem("Todo", JSON.stringify(listItems));
   }, [listItems]);
+  useEffect(() => {
+    if (verifiedUser) {
+      localStorage.setItem("user", JSON.stringify(verifiedUser));
+    }
+  }, [verifiedUser]);
 
   let signInWithGoogle = () => {
     signInWithPopup(auth, provider)

@@ -3,11 +3,24 @@ import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 
 
 function Navbar( props ){
     let username = props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
-  console.log( props.verifiedUser , "got it?");
+    const handleSignOut = () => {
+      signOut(auth)
+        .then(() => {
+          localStorage.removeItem('user');
+          console.log("Signed Out");
+          // navigate("/");
+          window.location.reload()
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    };
+
     return(
     <header className="flex  items-center h-16 bg-[#1D1D1D] fixed left-0 right-0 z-10">
           <nav className="flex p-6 justify-center w-full content-center relative">
@@ -35,6 +48,9 @@ function Navbar( props ){
                   alt=""
                 />
               </button> */}
+                     <h1 onClick={handleSignOut} className="font-normal text-[17px] text-white cursor-pointer flex items-center gap-1">
+       Logout
+            </h1>
             </div>
           </nav>
         </header>
