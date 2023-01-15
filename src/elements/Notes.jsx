@@ -4,36 +4,48 @@ import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
+import { db } from "../services/firebase";
+import {collection, addDoc, getDocs, doc, setDoc, serverTimestamp} from 'firebase/firestore';
 import Modal from "../Modal/Modal";
- function Notes() {
+ function Notes(props) {
     auth.languageCode = "it";
     const provider = new GoogleAuthProvider();
     const [verifiedUser, setVerifiedUser] = useState(null);
     const store = JSON.parse(localStorage.getItem("Todo"));
     const [show, setShow] = useState(false);
     const [dark, setDark] = useState(false);
+    const currentUser =  props.verifiedUser.uid
     const [listItems, setListItems] = useState(() => {
       if (store) {
         return store;
       } else {
-        return [];
+        return;
       }
     });
     useEffect(() => {
         localStorage.setItem("Todo", JSON.stringify(listItems));
       }, [listItems]);
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         setListItems([...listItems, e]);
+        const collectionsRef = collection(db, 'notes',);
+        await addDoc(collectionsRef, {
+           e,
+            // createdAt: serverTimestamp(),
+          });
         setShow(!show);
       };
       const closeToggle = () => setShow(!show);
       const darkMode = () => {
         setDark((prev) => !prev);
       };
+
+
+     console.log(listItems, "listItems");
+      console.log( currentUser , "user");
   return (
     <>
-        <Modal show={show} onChange={handleChange} onClose={closeToggle} />
+        <Modal show={show} onChange={handleChange} onClose={closeToggle} currentUser={currentUser}  />
     <div className="md:flex hidden h-screen">
         <div className="">
             <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6]">
@@ -47,7 +59,6 @@ import Modal from "../Modal/Modal";
             <FiEdit2 className="text-white" />
             </span>
             </button>
-            
             </div>
 
         </div>

@@ -87,7 +87,7 @@ function App() {
       <div className="">
         <Navbar verifiedUser={verifiedUser}/>
         <div className="w-full h-full">
-        <Notes/>
+        <Notes  verifiedUser={verifiedUser}/>
         </div>
       </div>
     </div>
