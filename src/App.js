@@ -68,13 +68,13 @@ function App() {
               {/* <img src={Man} alt="" className="w-full" /> */}
             </div>
           </div>
-          <div className="flex flex-col justify-center content-center">
-            <h1 className="font-bold text-center text-xl mb-4">The Notepad</h1>
+          <div className="flex flex-col justify-center items-center">
+            <h1 className="font-bold text-center text-xl mb-4">Fun Note</h1>
             <button
-              className="p-4 text-white w-32 rounded-lg capitalize self-center text-center bg-blue-500 font-bold"
+                       className='bg-black text-white rounded h-[45px] w-[160px] mt-4'
               onClick={() => signInWithGoogle()}
             >
-              get started
+              Get Started
             </button>
           </div>
         </div>
