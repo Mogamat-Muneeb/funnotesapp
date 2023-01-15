@@ -57,7 +57,7 @@ function App() {
     setDark((prev) => !prev);
   };
 
-  console.log(verifiedUser);
+  // console.log(verifiedUser);
 
   if (!verifiedUser) {
     return (

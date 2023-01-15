@@ -5,10 +5,11 @@ import { VscChromeClose } from "react-icons/vsc";
 
 const Modal = ({ show, onChange,onClose, currentUser }) => {
   const [inputValue, setInputValue] = useState("");
-  const handleData = (event) =>{
+  const handleData = (event, currentUser) =>{
     event.preventDefault();
+    
     }
-    console.log(inputValue, "inputValue");
+    // console.log(inputValue, "inputValue");
   return (
     <div className=" ">
     <div

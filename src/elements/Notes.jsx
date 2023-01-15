@@ -14,7 +14,7 @@ import Modal from "../Modal/Modal";
     const store = JSON.parse(localStorage.getItem("Todo"));
     const [show, setShow] = useState(false);
     const [dark, setDark] = useState(false);
-    const currentUser =  props.verifiedUser.uid
+    const currentUser =  props.verifiedUser.email
     const [listItems, setListItems] = useState(() => {
       if (store) {
         return store;
@@ -28,10 +28,10 @@ import Modal from "../Modal/Modal";
 
     const handleChange = async (e) => {
         setListItems([...listItems, e]);
-        const collectionsRef = collection(db, 'notes',);
+        const collectionsRef = collection(db, 'notes', currentUser, 'user');
         await addDoc(collectionsRef, {
            e,
-            // createdAt: serverTimestamp(),
+            createdAt: serverTimestamp(),
           });
         setShow(!show);
       };
@@ -40,9 +40,34 @@ import Modal from "../Modal/Modal";
         setDark((prev) => !prev);
       };
 
+     const getAllNotes =  async (e) => {
+        try {
+            let arr = [];
+          const querySnapshot = await getDocs(collection(db, 'notes', currentUser, 'user'));
+            querySnapshot.forEach((doc) => {
+              arr.push(doc.data());
+            });
+            // const average = sum / arr.length;
+            console.log(arr,"getAllReviews");
+            return arr;
+          } catch (error) {
+        //   toast("The reviews for this product failed to fetch, please try again later.", { ...config, type: "error" });
+          console.log("error on get all notes", error);
+        }
+      }
 
-     console.log(listItems, "listItems");
-      console.log( currentUser , "user");
+ const fetchReviews = async () => {
+    getAllNotes(listItems);
+    console.log(getAllNotes, "getAllNotes");
+  };
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+
+
+    //  console.log(listItems, "listItems");
+    //   console.log( currentUser , "user");
   return (
     <>
         <Modal show={show} onChange={handleChange} onClose={closeToggle} currentUser={currentUser}  />
