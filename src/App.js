@@ -69,15 +69,15 @@ function App() {
 
   if (!verifiedUser) {
     return (
-      <div className="w-screen p-4 justify-center content-center  flex h-screen">
-        <div className="w-11/12 flex flex-col justify-center content-center">
-          <div className="w-full p-4 h-2/3 flex content-center justify-center">
+      <div className="flex content-center justify-center w-screen h-screen p-4">
+        <div className="flex flex-col content-center justify-center w-11/12">
+          <div className="flex content-center justify-center w-full p-4 h-2/3">
             <div className="max-w-[80%] m-auto h-full">
               {/* <img src={Man} alt="" className="w-full" /> */}
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="font-bold text-center text-xl mb-4">Fun Note</h1>
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="mb-4 text-xl font-bold text-center">Fun Note YESMAHN</h1>
             <button
                        className='bg-black text-white rounded h-[45px] w-[160px] mt-4'
               onClick={() => signInWithGoogle()}

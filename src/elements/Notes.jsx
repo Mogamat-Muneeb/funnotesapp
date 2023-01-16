@@ -69,9 +69,9 @@ import { async } from "@firebase/util";
     fetchReviews();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-        const noteDocRef = doc(db, 'notes', id)
+        const noteDocRef = doc(db, 'notes', "06WmGuovcRpZoGzFfs1k")
         await deleteDoc(noteDocRef)
         console.log("Document successfully deleted!");
     } catch (error) {
@@ -82,12 +82,12 @@ import { async } from "@firebase/util";
   return (
     <>
         <Modal show={show} onChange={handleChange} onClose={closeToggle} currentUser={currentUser}  />
-    <div className="md:flex hidden h-screen">
+    <div className="hidden h-screen md:flex">
         <div className="">
             <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6]">
 
             <button
-            // className="fixed p-4 flex mb-6 font-semibold text-center shadow-md  bottom-9 rounded-3xl bg-green-300 right-3 "
+            // className="fixed flex p-4 mb-6 font-semibold text-center bg-green-300 shadow-md bottom-9 rounded-3xl right-3 "
             className="relative p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
             onClick={() => setShow(!show)}
             >
@@ -109,14 +109,96 @@ import { async } from "@firebase/util";
       notes.map((note, i) => {
         return (
           <div
-            className="items flex justify-evenly p-4 border-slate-300 border w-fit rounded-md mt-2 shadow-md dark:shadow-sm dark:shadow-white"
+            className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
             key={i}
           >
-            <div className="w-11/12 mr-4 text-black leading-6">
+            <div className="w-11/12 mr-4 leading-6 text-black">
             {note.e}
             </div>
             <button
-              className=" p-1 rounded-md"
+              className="p-1 rounded-md "
+             onClick={()=> {
+               handleDelete()
+             } 
+       }
+            >
+              <MdDelete className="" />
+            </button>
+          </div>
+        );
+      })
+    ) : (
+
+      <div className="flex flex-col items-center justify-center text-white mt-96">
+        <div className="flex flex-col items-center justify-center h-full m-auto">
+          <div>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-black ">
+              Add a note to your journal
+            </h1>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+    </div>
+
+    {/* MOBILE */}
+    
+    <div className="flex flex-col h-full md:hidden">
+    <div
+    className={`flexl  m-auto mt-10 flex-col flex-wrap p-6  relative ${
+      show ? " " : ""
+    }`}
+  >
+    {/* {listItems.length > 0 ? (
+      listItems.map((val, i) => {
+        return (
+          <div
+            className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
+            key={i}
+          >
+            <div className="w-11/12 mr-4 leading-6 text-black">
+              {val}
+            </div>
+            <button
+              className="p-1 rounded-md "
+              onClick={() => {
+                setListItems(listItems.filter((val, id) => i !== id));
+              }}
+            >
+              <MdDelete className="" />
+            </button>
+          </div>
+        );
+      })
+    ) : (
+      <div className="flex flex-col items-center justify-center text-white">
+        <div className="flex flex-col items-center justify-center h-full m-auto">
+          <div>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-black ">
+              Add a note to your journal
+            </h1>
+          </div>
+        </div>
+      </div>
+    )} */}
+          {notes.length}
+    {notes.length > 0 ? (
+      notes.map((note, i) => {
+        return (
+          <div
+            className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
+            key={i}
+          >
+            <div className="w-11/12 mr-4 leading-6 text-black">
+            {note.e}
+            </div>
+            <button
+              className="p-1 rounded-md "
              onClick={()=> {
                handleDelete()
              } 
@@ -130,56 +212,12 @@ import { async } from "@firebase/util";
     ) 
     : (
 
-      <div className="text-white  flex flex-col mt-96 justify-center items-center">
-        <div className="flex justify-center items-center flex-col m-auto h-full">
+      <div className="flex flex-col items-center justify-center text-white mt-96">
+        <div className="flex flex-col items-center justify-center h-full m-auto">
           <div>
           </div>
           <div>
-            <h1 className=" font-bold text-xl text-black">
-              Add a note to your journal
-            </h1>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
-    </div>
-    <div className="flex flex-col md:hidden h-full">
-    <div
-    className={`flexl  m-auto mt-10 flex-col flex-wrap p-6  relative ${
-      show ? " " : ""
-    }`}
-  >
-    {listItems.length > 0 ? (
-      listItems.map((val, i) => {
-        return (
-          <div
-            className="items flex justify-evenly p-4 border-slate-300 border w-fit rounded-md mt-2 shadow-md dark:shadow-sm dark:shadow-white"
-            key={i}
-          >
-            <div className="w-11/12 mr-4 text-black leading-6">
-              {val}
-            </div>
-            <button
-              className=" p-1 rounded-md"
-              onClick={() => {
-                setListItems(listItems.filter((val, id) => i !== id));
-              }}
-            >
-              <MdDelete className="" />
-            </button>
-          </div>
-        );
-      })
-    ) : (
-      // <p>Add a note to display here</p>
-      <div className="text-white  flex flex-col  justify-center items-center">
-        <div className="flex justify-center items-center flex-col m-auto h-full">
-          <div>
-            {/* <img src={TravellingMan} alt="Travelling man" /> */}
-          </div>
-          <div>
-            <h1 className=" font-bold text-xl text-black">
+            <h1 className="text-xl font-bold text-black ">
               Add a note to your journal
             </h1>
           </div>
