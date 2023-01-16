@@ -16,14 +16,14 @@ import { auth } from "./services/firebase";
 function App() {
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
-  let [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(false);
   // const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   let [show, setShow] = useState(false);
   // let [verifiedUser, setVerifiedUser] = useState(null);
-  let store = JSON.parse(localStorage.getItem("Todo"));
-  let storedUser = JSON.parse(localStorage.getItem("user"));
-let [verifiedUser, setVerifiedUser] = useState(storedUser);
-  let [listItems, setListItems] = useState(() => {
+  const store = JSON.parse(localStorage.getItem("Todo"));
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const [verifiedUser, setVerifiedUser] = useState(storedUser);
+  const [listItems, setListItems] = useState(() => {
     if (store) {
       return store;
     } else {
@@ -60,6 +60,7 @@ let [verifiedUser, setVerifiedUser] = useState(storedUser);
     setShow(!show);
   };
   let closeToggle = () => setShow(!show);
+  
   let darkMode = () => {
     setDark((prev) => !prev);
   };
