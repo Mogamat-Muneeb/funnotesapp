@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { FiPlus } from "react-icons/fi";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
@@ -69,6 +70,15 @@ import { async } from "@firebase/util";
     fetchReviews();
   }, []);
 
+  // const dateCreater =  () => {
+  //   notes.sort((a, b) => b.createdAt - a.createdAt)
+  //   .map((notes, index) => {
+  //     const date = new Date(notes.createdAt.seconds * 1000).toLocaleDateString();
+  //     console.log(date, "date");
+  // })}
+
+  // console.log(dateCreater, "dateCreater");
+
   const handleDelete = async () => {
     try {
         const noteDocRef = doc(db, 'notes', "06WmGuovcRpZoGzFfs1k")
@@ -92,7 +102,7 @@ import { async } from "@firebase/util";
             onClick={() => setShow(!show)}
             >
             <span>
-            <FiEdit2 className="text-white" />
+            <FiPlus className="text-white font-[30px]" />
             </span>
             </button>
             </div>
@@ -105,8 +115,9 @@ import { async } from "@firebase/util";
 
     >
       {notes.length}
-    {notes.length > 0 ? (
+    {/* {notes.length > 0 ? (
       notes.map((note, i) => {
+ 
         return (
           <div
             className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
@@ -114,6 +125,7 @@ import { async } from "@firebase/util";
           >
             <div className="w-11/12 mr-4 leading-6 text-black">
             {note.e}
+            {note.createdAt.seconds}
             </div>
             <button
               className="p-1 rounded-md "
@@ -140,7 +152,21 @@ import { async } from "@firebase/util";
           </div>
         </div>
       </div>
-    )}
+    )} */}
+
+        {notes &&
+                          notes
+                            .sort((a, b) => b.createdAt - a.createdAt)
+                            .map((note, index) => {
+                              const date = new Date(note.createdAt.seconds * 1000).toLocaleDateString();
+
+                              return (
+                                <div className="flex flex-col gap-4 mt-5 ">
+                                {note.e}
+                                {date}
+                                </div>
+            );
+         })}
   </div>
     </div>
 
@@ -234,7 +260,7 @@ import { async } from "@firebase/util";
             onClick={() => setShow(!show)}
             >
             <span>
-            <FiEdit2 className="text-white" />
+            <FiPlus className="text-white font-[30px]" />
             </span>
             </button>
             </div>
