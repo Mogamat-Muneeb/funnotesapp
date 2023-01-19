@@ -94,7 +94,7 @@ function App() {
     <div className={` ${dark ? "dark" : ""}   `}>
       <div className="">
         <Navbar verifiedUser={verifiedUser}/>
-        <div className="w-full h-full">
+        <div className="w-screen h-full">
         <Notes  verifiedUser={verifiedUser}/>
         </div>
       </div>

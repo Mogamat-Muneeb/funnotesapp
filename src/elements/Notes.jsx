@@ -120,7 +120,7 @@ function Notes(props) {
       />
       <div className="hidden h-screen md:flex">
         <div className="">
-          <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6]">
+          <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6] bg-green-400">
             <button
               // className="fixed flex p-4 mb-6 font-semibold text-center bg-green-300 shadow-md bottom-9 rounded-3xl right-3 "
               className="relative p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
@@ -133,62 +133,9 @@ function Notes(props) {
           </div>
         </div>
         <div
-          // className={`flex w-full justify-center m-auto mt-10 gap-3  p-6  relative ${
-          //   show ? "" : ""
-          // }`}
-          className="mt-12 bg-blue-400 flex w-full"
+          className="mt-12   w-full"
         >
-          {/* {notes.length} */}
-          {/* {notes.length > 0 ? (
-      notes.map((note, i) => {
- 
-        return (
-          <div
-            className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
-            key={i}
-          >
-            <div className="w-11/12 mr-4 leading-6 text-black">
-            {note.e}
-            {note.createdAt.seconds}
-            </div>
-            <button
-              className="p-1 rounded-md "
-             onClick={()=> {
-               handleDelete()
-             } 
-       }
-            >
-              <MdDelete className="" />
-            </button>
-          </div>
-        );
-      })
-    ) : (
 
-      <div className="flex flex-col items-center justify-center text-white mt-96">
-        <div className="flex flex-col items-center justify-center h-full m-auto">
-          <div>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-black ">
-              Add a note to your journal
-            </h1>
-          </div>
-        </div>
-      </div>
-    )} */}
-
-          {notes.length == 0 && (
-            <div className="flex flex-col items-center justify-center text-white mt-96">
-              <div className="flex flex-col items-center justify-center h-full m-auto">
-                <div>
-                  <h1 className="text-xl font-bold text-black ">
-                    Add a note to your journal
-                  </h1>
-                </div>
-              </div>
-            </div>
-          )}
 
           {notes &&
             notes
@@ -203,8 +150,8 @@ function Notes(props) {
                 });
 
                 return (
-                  <div className="gap-3 mt-5 flex ">
-                          <div className="w-[250px] h-[250px] bg-red-500 rounded-lg">
+                  <div className="mt-5  ">
+                          <div className="w-[250px] h-[250px] bg-blue-200 rounded-lg">
                           {showFullText === index ? (
                             <div>
                              {note.e}
@@ -300,7 +247,6 @@ function Notes(props) {
           ) : (
             <div className="flex flex-col items-center justify-center text-white mt-96">
               <div className="flex flex-col items-center justify-center h-full m-auto">
-                <div></div>
                 <div>
                   <h1 className="text-xl font-bold text-black ">
                     Add a note to your journal
