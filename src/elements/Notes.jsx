@@ -123,7 +123,7 @@ function Notes(props) {
       />
       <div className="hidden h-full md:flex">
         <div className="">
-          <div className="w-32  h-full border-r-2 border-[#f9f9f9d6] bg-purple-200 sticky top-0  ">
+          <div className="w-28  h-full border-r-2 border-[#f9f9f9d6] bg-purple-200 sticky top-0  ">
             <div className="h-[50%]  pt-5">
               <button
                 className=" p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
@@ -147,8 +147,7 @@ function Notes(props) {
                 )}
               </span>
               <span className="mt-1 font-semibold text-white">
-                {/* {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"} */}
-                {username}
+                {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
               </span>
               <button
                 onClick={handleSignOut}
@@ -175,17 +174,19 @@ function Notes(props) {
                 return (
                   <div
                     key={id}
-                    className="bg-green-400 border-2 border-black w-52 h-52"
+                    className="p-2 rounded-md shadow-lg w-52 h-52"
+                    style={{ backgroundColor: colors[id % colors.length] }}
                   >
                     <p className="pt-2 ">{val.e}</p>
-                    <p className="pt-2 ">{val.id}</p>
+                    <div className="flex justify-between pt-32">
                     <button
                       className="p-1 rounded-md "
                       onClick={() => handleDelete(val)}
                     >
                       <MdDelete className="" />
-                      {date}
                     </button>
+                    <p>{date}</p>
+                    </div>
                   </div>
                 );
               })}
