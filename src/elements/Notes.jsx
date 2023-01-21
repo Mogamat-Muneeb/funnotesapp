@@ -188,7 +188,7 @@ function Notes(props) {
                           </div>
                         ) : (
                           <div>
-                            {val.e.slice(0, 60)}
+                            {val.e.slice(0, 20)}
                             <div className='flex items-start pt-2 underline'>
                             {/* <button onClick={() => handleReadMore(id)}>Read More</button> */}
                             <button onClick={() => handleReadMore(id)}>
@@ -236,13 +236,15 @@ function Notes(props) {
                 return (
                   <div
                     key={id}
-                    className="w-40 h-40 p-2 rounded-md shadow-lg"
+                    className="flex flex-col w-40 h-40 p-2 rounded-md shadow-lg"
                     style={{ backgroundColor: colors[id % colors.length] }}
-                  >
-                    <div>
-                      <p className="pt-2 text-[14px] font-normal ">{val.e}</p>
-                    </div>
-                    <div className="flex items-end justify-between mt-[6.3rem]">
+                    >
+                      <div className="h-full ">
+                    {val.e.slice(0, 30)}
+                    <Link to={`/notes/${val.id}`}>Read More</Link>
+
+                      </div>
+                    <div className="flex items-end justify-between hull">
                       <p className="text-[12px] font-medium"> {date}</p>
                         <button
                           className=""
