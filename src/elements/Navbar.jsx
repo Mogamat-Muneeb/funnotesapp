@@ -4,56 +4,54 @@ import { MdDelete } from "react-icons/md";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
+import { FiLogOut } from "react-icons/fi";
 
+function Navbar(props) {
+  let username =
+    props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem("user");
+        console.log("Signed Out");
+        // navigate("/");
+        window.location.reload();
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
 
-function Navbar( props ){
-    let username = props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
-    const handleSignOut = () => {
-      signOut(auth)
-        .then(() => {
-          localStorage.removeItem('user');
-          console.log("Signed Out");
-          // navigate("/");
-          window.location.reload()
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    };
-
-    return(
+  return (
     <header className="flex  items-center h-16 bg-[#1D1D1D] fixed left-0 right-0 z-10">
-          <nav className="flex p-6 justify-center w-full content-center relative">
-            <div className="logo flex justify-between">
-              <span className="w-8 h-8 mr-2 rounded-full">
-                {props.verifiedUser ? (
-                  <img
-                    alt=""
-                    className="rounded-full h-full w-full object-contain"
-                    src={props.verifiedUser.photoURL}
-                  />
-                ) : (
-                  <span className="rounded-full w-full h-full bg-slate-400"></span>
-                )}
-              </span>
-              <span className="mt-1 font-semibold text-white">
-                {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
-              </span>
-            </div>
-            <div className="absolute ml-3 right-10">
-              {/* <button onClick={darkMode} className="w-10 h-10">
-                <img
-                  className="object-cover h-full w-full"
-                  src={dark ? ToggleOn : ToggleOff}
-                  alt=""
-                />
-              </button> */}
-                     <h1 onClick={handleSignOut} className="font-normal text-[17px] text-white cursor-pointer flex items-center gap-1">
-       Logout
-            </h1>
-            </div>
-          </nav>
-        </header>
-    )
+      <nav className="relative flex items-center justify-between w-full px-4">
+        <div className="flex items-center justify-between ">
+          <span className="mr-2 rounded-full w-7 h-7">
+            {props.verifiedUser ? (
+              <img
+                alt=""
+                className="object-contain w-full h-full rounded-full"
+                src={props.verifiedUser.photoURL}
+              />
+            ) : (
+              <span className="w-full h-full rounded-full bg-slate-400"></span>
+            )}
+          </span>
+          <span className="font-semibold text-white ">
+            {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
+          </span>
+        </div>
+        <div className="">
+          <button
+            onClick={handleSignOut}
+            className="font-bold text-[14px] text-white cursor-pointer flex items-center gap-1"
+          >
+            <FiLogOut className="font-semibold"/>
+            Logout
+          </button>
+        </div>
+      </nav>
+    </header>
+  );
 }
 export default Navbar;

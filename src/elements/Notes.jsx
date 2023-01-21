@@ -5,7 +5,7 @@ import { FiPlus } from "react-icons/fi";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
-
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -18,10 +18,13 @@ import {
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
 import { async } from "@firebase/util";
+import Navbar from "./Navbar";
 function Notes(props) {
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
-  const [verifiedUser, setVerifiedUser] = useState(null);
+  // const [verifiedUser, setVerifiedUser] = useState(null);
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const [verifiedUser, setVerifiedUser] = useState(storedUser);
   const store = JSON.parse(localStorage.getItem("Todo"));
   const [show, setShow] = useState(false);
   const [dark, setDark] = useState(false);
@@ -54,6 +57,8 @@ function Notes(props) {
     setDark((prev) => !prev);
   };
 
+  const colors = ["#f59475", "#f9c975", "#b388f9", "#12e8fb", "#e4f693", "#17e2f4"];
+
   // const getAllNotes = async (e) => {
   //   try {
   //     const arr = [];
@@ -78,6 +83,22 @@ function Notes(props) {
   //   fetchReviews();
   // }, [])
 
+  let username =
+    props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem("user");
+        console.log("Signed Out");
+        // navigate("/");
+        window.location.reload();
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
+
   const [details, setDetails] = useState([]);
 
   const userData = async () => {
@@ -91,7 +112,7 @@ function Notes(props) {
     }));
     setDetails(data);
   };
-  
+
   // const handleDelete = async (val) => {
   //   await deleteDoc(doc(db, "notes", val.id))
   // };
@@ -99,17 +120,17 @@ function Notes(props) {
   const handleDelete = async (val) => {
     console.log(val.id);
     try {
-        await deleteDoc(doc(db, "notes", currentUser, "user", val.id))
+      await deleteDoc(doc(db, "notes", currentUser, "user", val.id));
+      window.location.reload();
     } catch (error) {
-        console.error("Error deleting document: ", error);
+      console.error("Error deleting document: ", error);
     }
   };
-  
+
   useEffect(() => {
     userData();
     console.log(details, "detailsof");
   }, []);
-
 
   const [showFullText, setShowFullText] = useState(-1);
 
@@ -129,44 +150,51 @@ function Notes(props) {
         onClose={closeToggle}
         currentUser={currentUser}
       />
-      <div className="hidden h-screen pt-20 md:flex">
+      <div className="hidden h-full md:flex">
         <div className="">
-          <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6] bg-green-400">
-            <button
-              // className="fixed flex p-4 mb-6 font-semibold text-center bg-green-300 shadow-md bottom-9 rounded-3xl right-3 "
-              className="relative p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
-              onClick={() => setShow(!show)}
-            >
-              <span>
-                <FiPlus className="text-white font-[30px]" />
+          <div className="w-32  h-full border-r-2 border-[#f9f9f9d6] bg-purple-200 sticky top-0  ">
+            <div className="h-[50%]  pt-5">
+              <button
+                className=" p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
+                onClick={() => setShow(!show)}
+              >
+                <span>
+                  <FiPlus className="text-white font-[30px]" />
+                </span>
+              </button>
+            </div>
+            <div className="h-[50%]  flex flex-col justify-end items-center text-left pb-5">
+              <span className="mr-2 rounded-full ">
+                {props.verifiedUser ? (
+                  <img
+                    alt=""
+                    className="object-contain w-[40px] h-[40px] rounded-full"
+                    src={props.verifiedUser.photoURL}
+                  />
+                ) : (
+                  <span className="w-full h-full rounded-full bg-slate-400"></span>
+                )}
               </span>
-            </button>
+              <span className="mt-1 font-semibold text-white">
+                {/* {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"} */}
+                {username}
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="font-normal text-[17px] text-white cursor-pointer flex items-center gap-1"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
-        <div>
-          {details.map((val, id) => {
-            console.log(val, "val");
-            return (
-              <div key={id} className="border-2 border-black">
-                {/* <p  className="pt-2 ">{val.e}</p> */}
-                <p className="pt-2 ">{val.id}</p>
-                <button
-                  className="p-1 rounded-md "
-                  onClick={() => handleDelete(val)}
-                >
-                  {/* <MdDelete className="" /> */}d
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        {/* <div className="w-full mt-12">
-          {notes &&
-            notes
+        <div className="grid items-center justify-center w-full grid-cols-5 pt-16 mx-auto">
+          {details &&
+            details
               .sort((a, b) => b.createdAt - a.createdAt)
-              .map((note, index) => {
+              .map((val, id) => {
                 const date = new Date(
-                  note.createdAt.seconds * 1000
+                  val.createdAt.seconds * 1000
                 ).toLocaleDateString("default", {
                   day: "numeric",
                   month: "short",
@@ -174,106 +202,69 @@ function Notes(props) {
                 });
 
                 return (
-                  <div className="mt-5 " key={index}>
-                    <div className="w-[250px] h-[250px] bg-blue-200 rounded-lg">
-                      {showFullText === index ? (
-                        <div>
-                          {note.e}
-                          <div className="flex items-start pt-2">
-                            <button onClick={() => handleReadLess()}>
-                              Read Less
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          {note.e.slice(0, 60)}
-                          <div className="flex items-start pt-2">
-                            <button onClick={() => handleReadMore(note)}>
-                              Read More
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      <h1> {date}</h1>
-                      <button
-                        className="p-1 rounded-md "
-                        onClick={() => handleDelete(note)}
-                      >
-                        <MdDelete className="" />
-                      </button>
-                    </div>
+                  <div
+                    key={id}
+                    className="bg-green-400 border-2 border-black w-52 h-52"
+                  >
+                    <p className="pt-2 ">{val.e}</p>
+                    <p className="pt-2 ">{val.id}</p>
+                    <button
+                      className="p-1 rounded-md "
+                      onClick={() => handleDelete(val)}
+                    >
+                      <MdDelete className="" />
+                      {date}
+                    </button>
                   </div>
                 );
               })}
-        </div> */}
+        </div>
       </div>
 
       {/* MOBILE */}
 
       <div className="flex flex-col h-full md:hidden">
-        <div
-          className={`flexl  m-auto mt-10 flex-col flex-wrap p-6  relative ${
-            show ? " " : ""
-          }`}
-        >
-          {/* {listItems.length > 0 ? (
-      listItems.map((val, i) => {
-        return (
-          <div
-            className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
-            key={i}
-          >
-            <div className="w-11/12 mr-4 leading-6 text-black">
-              {val}
-            </div>
-            <button
-              className="p-1 rounded-md "
-              onClick={() => {
-                setListItems(listItems.filter((val, id) => i !== id));
-              }}
-            >
-              <MdDelete className="" />
-            </button>
-          </div>
-        );
-      })
-    ) : (
-      <div className="flex flex-col items-center justify-center text-white">
-        <div className="flex flex-col items-center justify-center h-full m-auto">
-          <div>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-black ">
-              Add a note to your journal
-            </h1>
-          </div>
+        <Navbar verifiedUser={verifiedUser} />
+        <div className="px-4 pt-20">
+            <p className="text-3xl font-bold">{details.length > 0 ? "Notes" : ""}</p>
         </div>
-      </div>
-    )} */}
-          {/* {notes.length}
-          {notes.length > 0 ? (
-            notes.map((note, i) => {
-              return (
-                <div
-                  className="flex p-4 mt-2 border rounded-md shadow-md items justify-evenly border-slate-300 w-fit dark:shadow-sm dark:shadow-white"
-                  key={i}
-                >
-                  <div className="w-11/12 mr-4 leading-6 text-black">
-                    {note.e}
-                  </div>
-                  <button
-                    className="p-1 rounded-md "
-                    onClick={() => {
-                      handleDelete();
-                    }}
+        <div className="grid grid-cols-2 gap-2 px-4 pt-5">
+
+          {/* Number of notes: {details.length} */}
+          {details.length > 0 ? (
+            details &&
+            details
+              .sort((a, b) => b.createdAt - a.createdAt)
+              .map((val, id) => {
+                const date = new Date(
+                  val.createdAt.seconds * 1000
+                ).toLocaleDateString("default", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                });
+                return (
+                  <div
+                    key={id}
+                    className="w-40 h-40 p-2 rounded-md shadow-lg"
+                    style={{ backgroundColor: colors[id % colors.length] }}
                   >
-                    <MdDelete className="" />
-                  </button>
-                </div>
-              );
-            })
+                    <div>
+                      <p className="pt-2 text-[14px] font-normal ">{val.e}</p>
+                    </div>
+                    <div className="flex items-end justify-between mt-[6.3rem]">
+                      <p className="text-[12px] font-medium"> {date}</p>
+                        <button
+                          className=""
+                          onClick={() => handleDelete(val)}
+                        >
+                          <MdDelete className="" />
+                        </button>
+                    </div>
+
+                  </div>
+                );
+              })
           ) : (
             <div className="flex flex-col items-center justify-center text-white mt-96">
               <div className="flex flex-col items-center justify-center h-full m-auto">
@@ -284,30 +275,12 @@ function Notes(props) {
                 </div>
               </div>
             </div>
-          )} */}
-            <div>
-           Number of notes:   {details.length}
-              {details.map((val, id) => {
-                // console.log(val, "val");/
-                return (
-                  <div key={id} className="border-2 border-black">
-                    {/* <p  className="pt-2 ">{val.e}</p> */}
-                    <p className="pt-2 ">{val.id}</p>
-                    <button
-                      className="p-1 bg-red-500 rounded-md"
-                      onClick={() => handleDelete(val)}
-                    >
-                    Delete
-                    </button>
-                  </div>
-                )})}
-        </div>
+          )}
         </div>
         <div className="">
-          <div className="  h-screen border-r-2 border-[#f9f9f9d6]">
+          <div className="  h-full border-r-2 border-[#f9f9f9d6]">
             <button
               className="fixed p-4 flex mb-6 font-semibold text-center shadow-md  bottom-9 rounded-3xl bg-[#1D1D1D] right-3 "
-              // className="relative p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
               onClick={() => setShow(!show)}
             >
               <span>

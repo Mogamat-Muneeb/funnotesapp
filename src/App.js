@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import Navbar from '../src/elements/Navbar'
-import Notes from '../src/elements/Notes'
+import Navbar from "../src/elements/Navbar";
+import Notes from "../src/elements/Notes";
 import "./App.css";
 // import Man from "./assets/sammy-line-man-marks-completed-tasks-in-a-notebook.png";
 import ToggleOn from "./assets/toggle-button.png";
@@ -32,6 +32,7 @@ function App() {
   });
 
   let username = verifiedUser && verifiedUser.displayName.split(" ")[0];
+  console.log(verifiedUser, "verifiedUser");
 
   useEffect(() => {
     localStorage.setItem("Todo", JSON.stringify(listItems));
@@ -60,7 +61,7 @@ function App() {
     setShow(!show);
   };
   let closeToggle = () => setShow(!show);
-  
+
   let darkMode = () => {
     setDark((prev) => !prev);
   };
@@ -70,21 +71,14 @@ function App() {
   if (!verifiedUser) {
     return (
       <div className="flex content-center justify-center w-screen h-screen p-4">
-        <div className="flex flex-col content-center justify-center w-11/12">
-          <div className="flex content-center justify-center w-full p-4 h-2/3">
-            <div className="max-w-[80%] m-auto h-full">
-              {/* <img src={Man} alt="" className="w-full" /> */}
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <h1 className="mb-4 text-xl font-bold text-center">Fun Note YESMAHN</h1>
-            <button
-                       className='bg-black text-white rounded h-[45px] w-[160px] mt-4'
-              onClick={() => signInWithGoogle()}
-            >
-              Get Started
-            </button>
-          </div>
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="mb-4 text-2xl font-extrabold text-center">Fun Notes</h1>
+          <button
+            className="bg-gradient-to-r from-[#021578] to-[#019AD9] text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
+            onClick={() => signInWithGoogle()}
+          >
+            Get Started
+          </button>
         </div>
       </div>
     );
@@ -93,9 +87,9 @@ function App() {
   return (
     <div className={` ${dark ? "dark" : ""}   `}>
       <div className="">
-        <Navbar verifiedUser={verifiedUser}/>
-        <div className="w-screen h-full">
-        <Notes  verifiedUser={verifiedUser}/>
+        {/* <Navbar verifiedUser={verifiedUser}/> */}
+        <div className="w-screen h-screen">
+          <Notes verifiedUser={verifiedUser} />
         </div>
       </div>
     </div>
