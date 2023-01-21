@@ -225,7 +225,7 @@ function Notes(props) {
 
       <div className="flex flex-col h-full md:hidden">
         <Navbar verifiedUser={verifiedUser} />
-        <div className="px-4 pt-20">
+        <div className="px-10 pt-20">
             <p className="text-3xl font-bold">{details.length > 0 ? "Notes" : ""}</p>
         </div>
         <div className="grid grid-cols-2 gap-2 px-10 pt-5">
