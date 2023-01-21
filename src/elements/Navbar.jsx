@@ -37,16 +37,16 @@ function Navbar(props) {
               <span className="w-full h-full rounded-full bg-slate-400"></span>
             )}
           </span>
-          <span className="font-semibold text-white ">
+          <span className="text-white ">
             {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
           </span>
         </div>
         <div className="">
           <button
             onClick={handleSignOut}
-            className="font-bold text-[14px] text-white cursor-pointer flex items-center gap-1"
+            className="font-normal text-[14px] text-white cursor-pointer flex items-center gap-1"
           >
-            <FiLogOut className="font-semibold"/>
+            <FiLogOut className="font-normal"/>
             Logout
           </button>
         </div>
