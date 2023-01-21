@@ -228,7 +228,7 @@ function Notes(props) {
         <div className="px-10 pt-20">
             <p className="text-3xl font-bold">{details.length > 0 ? "Notes" : ""}</p>
         </div>
-        <div className="grid grid-cols-2 gap-2 px-10 pt-5">
+        <div className={` gap-2 px-10 pt-5 ${details.length > 0 ? "grid grid-cols-2" : "flex justify-center"}`}>
 
           {/* Number of notes: {details.length} */}
           {details.length > 0 ? (
