@@ -5,6 +5,7 @@ import { FiPlus } from "react-icons/fi";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
+
 import {
   collection,
   addDoc,
@@ -13,6 +14,7 @@ import {
   setDoc,
   serverTimestamp,
   deleteDoc,
+  query,
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
 import { async } from "@firebase/util";
@@ -46,69 +48,78 @@ function Notes(props) {
     window.location.reload();
     setShow(!show);
   };
+
   const closeToggle = () => setShow(!show);
   const darkMode = () => {
     setDark((prev) => !prev);
   };
 
-  const getAllNotes = async (e) => {
+  // const getAllNotes = async (e) => {
+  //   try {
+  //     const arr = [];
+  //     const querySnapshot = await getDocs(
+  //       collection(db, "notes", currentUser, "user")
+  //     );
+  //     querySnapshot.forEach((doc) => {
+  //       arr.push(doc.data());
+  //     });
+  //     setNotes(arr);
+  //     return arr;
+  //   } catch (error) {
+  //     console.log("error on get all notes", error);
+  //   }
+  // };
+
+  // const fetchReviews = async () => {
+  //   getAllNotes(props.verifiedUser.displayName);
+  // };
+
+  // useEffect(() => {
+  //   fetchReviews();
+  // }, [])
+
+  const [details, setDetails] = useState([]);
+
+  const userData = async () => {
+    const q = query(collection(db, "notes", currentUser, "user"));
+
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+      // doc.data() is never undefined for query doc snapshots
+      ...doc.data(),
+      id: doc.id,
+    }));
+    setDetails(data);
+  };
+  
+  // const handleDelete = async (val) => {
+  //   await deleteDoc(doc(db, "notes", val.id))
+  // };
+
+  const handleDelete = async (val) => {
+    console.log(val.id);
     try {
-      const arr = [];
-      const querySnapshot = await getDocs(
-        collection(db, "notes", currentUser, "user")
-      );
-      querySnapshot.forEach((doc) => {
-        arr.push(doc.data());
-      });
-      // const average = sum / arr.length;
-      // console.log(arr,"getAllReviews");
-      setNotes(arr);
-      return arr;
+        await deleteDoc(doc(db, "notes", currentUser, "user", val.id))
     } catch (error) {
-      //   toast("The reviews for this product failed to fetch, please try again later.", { ...config, type: "error" });
-      console.log("error on get all notes", error);
+        console.error("Error deleting document: ", error);
     }
   };
-  console.log(notes, "yes");
-
-  const fetchReviews = async () => {
-    getAllNotes(props.verifiedUser.displayName);
-    // console.log(getAllNotes, "getAllNotes");
-  };
+  
   useEffect(() => {
-    fetchReviews();
+    userData();
+    console.log(details, "detailsof");
   }, []);
 
-  // const dateCreater =  () => {
-  //   notes.sort((a, b) => b.createdAt - a.createdAt)
-  //   .map((notes, index) => {
-  //     const date = new Date(notes.createdAt.seconds * 1000).toLocaleDateString();
-  //     console.log(date, "date");
-  // })}
-
-  // console.log(dateCreater, "dateCreater");
-
-  const handleDelete = async () => {
-    try {
-      const noteDocRef = doc(db, "notes", "06WmGuovcRpZoGzFfs1k");
-      await deleteDoc(noteDocRef);
-      console.log("Document successfully deleted!");
-    } catch (error) {
-      console.error("Error removing document: ", error);
-    }
-  };
 
   const [showFullText, setShowFullText] = useState(-1);
 
   const handleReadMore = (index) => {
     setShowFullText(index);
   };
-  console.log('index', showFullText);
 
   const handleReadLess = () => {
     setShowFullText(-1);
   };
-
 
   return (
     <>
@@ -118,7 +129,7 @@ function Notes(props) {
         onClose={closeToggle}
         currentUser={currentUser}
       />
-      <div className="hidden h-screen md:flex">
+      <div className="hidden h-screen pt-20 md:flex">
         <div className="">
           <div className="w-32  h-screen border-r-2 border-[#f9f9f9d6] bg-green-400">
             <button
@@ -132,11 +143,24 @@ function Notes(props) {
             </button>
           </div>
         </div>
-        <div
-          className="mt-12   w-full"
-        >
-
-
+        <div>
+          {details.map((val, id) => {
+            console.log(val, "val");
+            return (
+              <div key={id} className="border-2 border-black">
+                {/* <p  className="pt-2 ">{val.e}</p> */}
+                <p className="pt-2 ">{val.id}</p>
+                <button
+                  className="p-1 rounded-md "
+                  onClick={() => handleDelete(val)}
+                >
+                  {/* <MdDelete className="" /> */}d
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        {/* <div className="w-full mt-12">
           {notes &&
             notes
               .sort((a, b) => b.createdAt - a.createdAt)
@@ -150,34 +174,40 @@ function Notes(props) {
                 });
 
                 return (
-                  <div className="mt-5  ">
-                          <div className="w-[250px] h-[250px] bg-blue-200 rounded-lg">
-                          {showFullText === index ? (
-                            <div>
-                             {note.e}
-                              <div className="flex items-start pt-2">
-                                <button onClick={() => handleReadLess()}>
-                                  Read Less
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div>
-                              {note.e.slice(0, 60)}
-                              <div className="flex items-start pt-2">
-                                <button onClick={() => handleReadMore(index)}>
-                                  Read More
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                              <h1> {date}</h1>
+                  <div className="mt-5 " key={index}>
+                    <div className="w-[250px] h-[250px] bg-blue-200 rounded-lg">
+                      {showFullText === index ? (
+                        <div>
+                          {note.e}
+                          <div className="flex items-start pt-2">
+                            <button onClick={() => handleReadLess()}>
+                              Read Less
+                            </button>
                           </div>
+                        </div>
+                      ) : (
+                        <div>
+                          {note.e.slice(0, 60)}
+                          <div className="flex items-start pt-2">
+                            <button onClick={() => handleReadMore(note)}>
+                              Read More
+                            </button>
+                          </div>
+                        </div>
+                      )}
 
+                      <h1> {date}</h1>
+                      <button
+                        className="p-1 rounded-md "
+                        onClick={() => handleDelete(note)}
+                      >
+                        <MdDelete className="" />
+                      </button>
+                    </div>
                   </div>
                 );
               })}
-        </div>
+        </div> */}
       </div>
 
       {/* MOBILE */}
@@ -222,7 +252,7 @@ function Notes(props) {
         </div>
       </div>
     )} */}
-          {notes.length}
+          {/* {notes.length}
           {notes.length > 0 ? (
             notes.map((note, i) => {
               return (
@@ -254,7 +284,24 @@ function Notes(props) {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
+            <div>
+           Number of notes:   {details.length}
+              {details.map((val, id) => {
+                // console.log(val, "val");/
+                return (
+                  <div key={id} className="border-2 border-black">
+                    {/* <p  className="pt-2 ">{val.e}</p> */}
+                    <p className="pt-2 ">{val.id}</p>
+                    <button
+                      className="p-1 bg-red-500 rounded-md"
+                      onClick={() => handleDelete(val)}
+                    >
+                    Delete
+                    </button>
+                  </div>
+                )})}
+        </div>
         </div>
         <div className="">
           <div className="  h-screen border-r-2 border-[#f9f9f9d6]">
