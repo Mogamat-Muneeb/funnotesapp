@@ -72,7 +72,7 @@ function App() {
     return (
       <div className="flex content-center justify-center w-screen h-screen p-4">
         <div className="flex flex-col items-center justify-center">
-          <h1 className="mb-4 text-2xl font-extrabold text-center">Fun Notes</h1>
+          <h1 className="text-2xl font-bold text-center">Fun Notes</h1>
           <button
             className="bg-gradient-to-r from-[#021578] to-[#019AD9] text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
             onClick={() => signInWithGoogle()}

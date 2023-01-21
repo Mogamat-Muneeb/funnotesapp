@@ -22,7 +22,6 @@ import Navbar from "./Navbar";
 function Notes(props) {
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
-  // const [verifiedUser, setVerifiedUser] = useState(null);
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const [verifiedUser, setVerifiedUser] = useState(storedUser);
   const store = JSON.parse(localStorage.getItem("Todo"));
@@ -59,30 +58,6 @@ function Notes(props) {
 
   const colors = ["#f59475", "#f9c975", "#b388f9", "#12e8fb", "#e4f693", "#17e2f4"];
 
-  // const getAllNotes = async (e) => {
-  //   try {
-  //     const arr = [];
-  //     const querySnapshot = await getDocs(
-  //       collection(db, "notes", currentUser, "user")
-  //     );
-  //     querySnapshot.forEach((doc) => {
-  //       arr.push(doc.data());
-  //     });
-  //     setNotes(arr);
-  //     return arr;
-  //   } catch (error) {
-  //     console.log("error on get all notes", error);
-  //   }
-  // };
-
-  // const fetchReviews = async () => {
-  //   getAllNotes(props.verifiedUser.displayName);
-  // };
-
-  // useEffect(() => {
-  //   fetchReviews();
-  // }, [])
-
   let username =
     props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
 
@@ -106,16 +81,12 @@ function Notes(props) {
 
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
-      // doc.data() is never undefined for query doc snapshots
       ...doc.data(),
       id: doc.id,
     }));
     setDetails(data);
   };
 
-  // const handleDelete = async (val) => {
-  //   await deleteDoc(doc(db, "notes", val.id))
-  // };
 
   const handleDelete = async (val) => {
     console.log(val.id);
@@ -227,10 +198,10 @@ function Notes(props) {
         <Navbar verifiedUser={verifiedUser} />
         <div className="px-10 pt-20">
             <p className="text-3xl font-bold">{details.length > 0 ? "Notes" : ""}</p>
-        </div>
+            <p className="text-[12px] leading-3"> You have {details.length > 1 ? `${details.length} notes` : `${details.length} note`}</p>
+          </div>
         <div className={` gap-2 px-10 pt-5 ${details.length > 0 ? "grid grid-cols-2" : "flex justify-center"}`}>
 
-          {/* Number of notes: {details.length} */}
           {details.length > 0 ? (
             details &&
             details
