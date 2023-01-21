@@ -6,6 +6,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
+
 import {
   collection,
   addDoc,
@@ -19,6 +20,7 @@ import {
 import Modal from "../Modal/Modal";
 import { async } from "@firebase/util";
 import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
 function Notes(props) {
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
@@ -114,7 +116,7 @@ function Notes(props) {
   };
 
   return (
-    <>
+    <div  className="w-screen h-screen">
       <Modal
         show={show}
         onChange={handleChange}
@@ -123,14 +125,14 @@ function Notes(props) {
       />
       <div className="hidden h-full md:flex">
         <div className="">
-          <div className="w-28  h-full border-r-2 border-[#f9f9f9d6] bg-purple-200 sticky top-0  ">
+          <div className="w-28  h-full border-r-2 border-[#f9f9f9d6] shadow-md sticky top-0  ">
             <div className="h-[50%]  pt-5">
               <button
                 className=" p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
                 onClick={() => setShow(!show)}
               >
                 <span>
-                  <FiPlus className="text-white font-[30px]" />
+                  <FiPlus className="text-white font-[30px] shadow-md" />
                 </span>
               </button>
             </div>
@@ -146,19 +148,19 @@ function Notes(props) {
                   <span className="w-full h-full rounded-full bg-slate-400"></span>
                 )}
               </span>
-              <span className="mt-1 font-semibold text-white">
+              <span className="mt-1 font-semibold text-black">
                 {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
               </span>
               <button
                 onClick={handleSignOut}
-                className="font-normal text-[17px] text-white cursor-pointer flex items-center gap-1"
+                className="font-normal text-[17px] text-black cursor-pointer flex items-center gap-1"
               >
                 Logout
               </button>
             </div>
           </div>
         </div>
-        <div className="grid items-center justify-center w-full grid-cols-5 pt-16 mx-auto">
+        <div className="grid grid-cols-6 px-4 pt-16 gap-9">
           {details &&
             details
               .sort((a, b) => b.createdAt - a.createdAt)
@@ -177,15 +179,32 @@ function Notes(props) {
                     className="p-2 rounded-md shadow-lg w-52 h-52"
                     style={{ backgroundColor: colors[id % colors.length] }}
                   >
-                    <p className="pt-2 ">{val.e}</p>
+                         {showFullText === id ? (
+                          <div>
+                           <p className="pt-2 ">{val.e}</p>
+                            <div className='flex items-start pt-2 underline'>
+                            <button onClick={() => handleReadLess()}>Read Less</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            {val.e.slice(0, 60)}
+                            <div className='flex items-start pt-2 underline'>
+                            {/* <button onClick={() => handleReadMore(id)}>Read More</button> */}
+                            <button onClick={() => handleReadMore(id)}>
+                            <Link to={`/notes/${val.id}`}>Read More</Link>
+                          </button>
+                            </div>
+                          </div>
+                        )}
                     <div className="flex justify-between pt-32">
+                      <p className="text-[14px]">{date}</p>
                     <button
                       className="p-1 rounded-md "
                       onClick={() => handleDelete(val)}
                     >
                       <MdDelete className="" />
                     </button>
-                    <p>{date}</p>
                     </div>
                   </div>
                 );
@@ -193,7 +212,6 @@ function Notes(props) {
         </div>
       </div>
 
-      {/* MOBILE */}
 
       <div className="flex flex-col h-full md:hidden">
         <Navbar verifiedUser={verifiedUser} />
@@ -262,7 +280,7 @@ function Notes(props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 export default Notes;

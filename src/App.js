@@ -12,6 +12,8 @@ import ToggleOff from "./assets/off-button.png";
 import Modal from "./Modal/Modal";
 // import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { auth } from "./services/firebase";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import NoteDetail from '../src/elements/NoteDetail'
 
 function App() {
   auth.languageCode = "it";
@@ -85,14 +87,32 @@ function App() {
   }
 
   return (
-    <div className={` ${dark ? "dark" : ""}   `}>
+
+    <Router>
+      <Routes>
+      <Route path="/notes/:id" element={ <NoteDetail />}/>
+ 
+      <Route path="/"  element={    <Notes verifiedUser={verifiedUser} /> }/>
+        {/* <div className={` ${dark ? "dark" : ""}   `}>
+          <div className=""> */}
+            {/* <Navbar verifiedUser={verifiedUser}/> */}
+            {/* <div className="w-screen h-screen"> */}
+           
+            {/* </div> */}
+          {/* </div>
+        </div> */}
+
+    {/* <div className={` ${dark ? "dark" : ""}   `}>
       <div className="">
-        {/* <Navbar verifiedUser={verifiedUser}/> */}
+        <Navbar verifiedUser={verifiedUser}/>
         <div className="w-screen h-screen">
           <Notes verifiedUser={verifiedUser} />
         </div>
       </div>
-    </div>
+    </div> */}
+
+      </Routes>
+    </Router>
   );
 }
 
