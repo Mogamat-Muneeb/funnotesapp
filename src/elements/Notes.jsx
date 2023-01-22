@@ -174,37 +174,24 @@ function Notes(props) {
                 });
 
                 return (
-                  <div
+            <div
                     key={id}
-                    className="p-2 rounded-md shadow-lg w-52 h-52"
+                    className="flex flex-col p-2 rounded-md shadow-lg w-52 h-52"
                     style={{ backgroundColor: colors[id % colors.length] }}
-                  >
-                         {showFullText === id ? (
-                          <div>
-                           <p className="pt-2 ">{val.e}</p>
-                            <div className='flex items-start pt-2 underline'>
-                            <button onClick={() => handleReadLess()}>Read Less</button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div>
-                            {val.e.slice(0, 20)}
-                            <div className='flex items-start pt-2 underline'>
-                            {/* <button onClick={() => handleReadMore(id)}>Read More</button> */}
-                            <button onClick={() => handleReadMore(id)}>
-                            <Link to={`/notes/${val.id}`}>Read More</Link>
-                          </button>
-                            </div>
-                          </div>
-                        )}
-                    <div className="flex justify-between pt-32">
-                      <p className="text-[14px]">{date}</p>
-                    <button
-                      className="p-1 rounded-md "
-                      onClick={() => handleDelete(val)}
                     >
-                      <MdDelete className="" />
-                    </button>
+                      <div className="h-full ">
+                        <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
+                    <Link to={`/notes/${val.id}`}>Read More</Link>
+
+                      </div>
+                    <div className="flex items-end justify-between hull">
+                      <p className="text-[12px] font-medium"> {date}</p>
+                        <button
+                          className=""
+                          onClick={() => handleDelete(val)}
+                        >
+                          <MdDelete className="" />
+                        </button>
                     </div>
                   </div>
                 );
@@ -240,7 +227,7 @@ function Notes(props) {
                     style={{ backgroundColor: colors[id % colors.length] }}
                     >
                       <div className="h-full ">
-                    {val.e.slice(0, 30)}
+                        <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
                     <Link to={`/notes/${val.id}`}>Read More</Link>
 
                       </div>
