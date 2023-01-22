@@ -59,12 +59,15 @@ const NoteDetail = () => {
       {/* {date} */}
         </div>
     </div>
-    <div className="flex-col hidden px-10 pt-10 md:flex ">
-        <BiArrowBack className="text-[30px]"/>
-      {/* <h1 className="text-lg font-bold">Note Name : {details.e.slice(0, 20)}</h1> */}
-      <p>Note ID: {id}</p>
-      {details.e}
+    <div className="hidden gap-4 px-10 pt-10 md:flex">
+    <Link to="/">
+        <BiArrowBack className="text-[25px]" />
+        </Link>
+        <div className="flex flex-col">
+            {/* <p className="text-lg font-bold">Note Name : {details.e.slice(0, 60)}</p> */}
+            <p className="text-[16px]">{details.e}</p>
       {/* {date} */}
+        </div>
     </div>
     
     </>

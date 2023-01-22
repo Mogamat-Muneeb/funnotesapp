@@ -126,7 +126,7 @@ function Notes(props) {
       <div className="hidden h-full md:flex">
         <div className="">
           <div className="w-28  h-full border-r-2 border-[#f9f9f9d6] shadow-md sticky top-0  ">
-            <div className="h-[50%]  pt-5">
+            <div className="h-[50%]  pt-10">
               <button
                 className=" p-4 mx-auto flex mb-6 font-semibold text-center shadow-md  top-20 rounded-3xl bg-[#1D1D1D] "
                 onClick={() => setShow(!show)}
@@ -160,7 +160,7 @@ function Notes(props) {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-6 px-4 pt-16 gap-9">
+        <div className="grid grid-cols-6 px-4 pt-10 gap-9">
           {details &&
             details
               .sort((a, b) => b.createdAt - a.createdAt)
