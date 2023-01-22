@@ -6,7 +6,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
-
+import { FiLogOut } from "react-icons/fi";
 import {
   collection,
   addDoc,
@@ -58,7 +58,14 @@ function Notes(props) {
     setDark((prev) => !prev);
   };
 
-  const colors = ["#f59475", "#f9c975", "#b388f9", "#12e8fb", "#e4f693", "#17e2f4"];
+  const colors = [
+    "#f59475",
+    "#f9c975",
+    "#b388f9",
+    "#12e8fb",
+    "#e4f693",
+    "#17e2f4",
+  ];
 
   let username =
     props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
@@ -89,7 +96,6 @@ function Notes(props) {
     setDetails(data);
   };
 
-
   const handleDelete = async (val) => {
     console.log(val.id);
     try {
@@ -116,7 +122,7 @@ function Notes(props) {
   };
 
   return (
-    <div  className="w-screen h-screen">
+    <div className="w-screen h-screen">
       <Modal
         show={show}
         onChange={handleChange}
@@ -136,8 +142,8 @@ function Notes(props) {
                 </span>
               </button>
             </div>
-            <div className="h-[50%]  flex flex-col justify-end items-center text-left pb-5">
-              <span className="mr-2 rounded-full ">
+            <div className="h-[50%]  flex flex-col justify-end items-center text-left  pb-10 gap-2">
+              <span className="rounded-full ">
                 {props.verifiedUser ? (
                   <img
                     alt=""
@@ -148,13 +154,11 @@ function Notes(props) {
                   <span className="w-full h-full rounded-full bg-slate-400"></span>
                 )}
               </span>
-              <span className="mt-1 font-semibold text-black">
-                {props.verifiedUser ? `${username}'s Fun Notes` : "Fun Notes"}
-              </span>
               <button
                 onClick={handleSignOut}
-                className="font-normal text-[17px] text-black cursor-pointer flex items-center gap-1"
+                className="font-medium text-[16px] text-black cursor-pointer flex items-center gap-1"
               >
+                <FiLogOut className="font-normal" />
                 Logout
               </button>
             </div>
@@ -174,24 +178,20 @@ function Notes(props) {
                 });
 
                 return (
-            <div
+                  <div
                     key={id}
                     className="flex flex-col p-2 rounded-md shadow-lg w-52 h-52"
                     style={{ backgroundColor: colors[id % colors.length] }}
-                    >
-                      <div className="h-full ">
-                        <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
-                    <Link to={`/notes/${val.id}`}>Read More</Link>
-
-                      </div>
+                  >
+                    <div className="h-full ">
+                      <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
+                      <Link to={`/notes/${val.id}`}>Read More</Link>
+                    </div>
                     <div className="flex items-end justify-between hull">
                       <p className="text-[12px] font-medium"> {date}</p>
-                        <button
-                          className=""
-                          onClick={() => handleDelete(val)}
-                        >
-                          <MdDelete className="" />
-                        </button>
+                      <button className="" onClick={() => handleDelete(val)}>
+                        <MdDelete className="" />
+                      </button>
                     </div>
                   </div>
                 );
@@ -199,15 +199,25 @@ function Notes(props) {
         </div>
       </div>
 
-
       <div className="flex flex-col h-full md:hidden">
         <Navbar verifiedUser={verifiedUser} />
         <div className="px-10 pt-20">
-            <p className="text-3xl font-bold">{details.length > 0 ? "Notes" : ""}</p>
-            <p className="text-[12px] leading-3"> You have {details.length > 1 ? `${details.length} notes` : `${details.length} note`}</p>
-          </div>
-        <div className={` gap-2 px-10 pt-5 ${details.length > 0 ? "grid grid-cols-2" : "flex justify-center"}`}>
-
+          <p className="text-3xl font-bold">
+            {details.length > 0 ? "Notes" : ""}
+          </p>
+          <p className="text-[12px] leading-3">
+            {" "}
+            You have{" "}
+            {details.length > 1
+              ? `${details.length} notes`
+              : `${details.length} note`}
+          </p>
+        </div>
+        <div
+          className={` gap-2 px-10 pt-5 ${
+            details.length > 0 ? "grid grid-cols-2" : "flex justify-center"
+          }`}
+        >
           {details.length > 0 ? (
             details &&
             details
@@ -225,22 +235,17 @@ function Notes(props) {
                     key={id}
                     className="flex flex-col w-40 h-40 p-2 rounded-md shadow-lg"
                     style={{ backgroundColor: colors[id % colors.length] }}
-                    >
-                      <div className="h-full ">
-                        <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
-                    <Link to={`/notes/${val.id}`}>Read More</Link>
-
-                      </div>
+                  >
+                    <div className="h-full ">
+                      <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
+                      <Link to={`/notes/${val.id}`}>Read More</Link>
+                    </div>
                     <div className="flex items-end justify-between hull">
                       <p className="text-[12px] font-medium"> {date}</p>
-                        <button
-                          className=""
-                          onClick={() => handleDelete(val)}
-                        >
-                          <MdDelete className="" />
-                        </button>
+                      <button className="" onClick={() => handleDelete(val)}>
+                        <MdDelete className="" />
+                      </button>
                     </div>
-
                   </div>
                 );
               })
