@@ -24,7 +24,7 @@ function Navbar(props) {
 
   return (
     <header className="flex  items-center h-16 bg-[#1D1D1D] fixed left-0 right-0 z-10">
-      <nav className="relative flex items-center justify-between w-full px-4">
+      <nav className="relative flex items-center justify-between w-full px-10">
         <div className="flex items-center justify-between ">
           <span className="mr-2 rounded-full w-7 h-7">
             {props.verifiedUser ? (

@@ -15,6 +15,7 @@ import {
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
 import { async } from "@firebase/util";
+import EditModal from "../Modal/EditModal";
 const NoteDetail = () => {
   let { id } = useParams();
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -68,6 +69,7 @@ const NoteDetail = () => {
             <p className="text-[16px]">{details.e}</p>
       {/* {date} */}
         </div>
+        <EditModal/>
     </div>
     
     </>

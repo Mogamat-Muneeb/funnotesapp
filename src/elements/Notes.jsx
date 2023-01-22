@@ -18,6 +18,7 @@ import {
   query,
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
+import EditModal from "../Modal/Modal";
 import { async } from "@firebase/util";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";

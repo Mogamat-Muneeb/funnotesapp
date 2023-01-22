@@ -3,14 +3,14 @@ import { VscChromeClose } from "react-icons/vsc";
 
 
 
-const ReadModal = ({  }) => {
+const EditModal = ({  }) => {
 
   return (
     <div className="">
-
+      {/* hey */}
     </div>
   );
 };
 
-export default ReadModal;
+export default EditModal;
 
