@@ -202,7 +202,7 @@ function Notes(props) {
 
       <div className="flex flex-col h-full md:hidden">
         <Navbar verifiedUser={verifiedUser} />
-        <div className="px-10 pt-20">
+        <div className="px-8 pt-20">
           <p className="text-3xl font-bold">
             {details.length > 0 ? "Notes" : ""}
           </p>
@@ -215,8 +215,8 @@ function Notes(props) {
           </p>
         </div>
         <div
-          className={` gap-2 px-10 pt-5 ${
-            details.length > 0 ? "grid grid-cols-2" : "flex justify-center"
+          className={` gap-2 px-8 pt-5 ${
+            details.length > 0 ? "grid grid-cols-2 gap-2" : "flex justify-center"
           }`}
         >
           {details.length > 0 ? (
@@ -234,7 +234,7 @@ function Notes(props) {
                 return (
                   <div
                     key={id}
-                    className="flex flex-col w-40 h-40 p-2 rounded-md shadow-lg"
+                    className="flex flex-col h-40 p-2 rounded-md shadow-lg w-[10rem]"
                     style={{ backgroundColor: colors[id % colors.length] }}
                   >
                     <div className="h-full ">
@@ -265,7 +265,7 @@ function Notes(props) {
         <div className="">
           <div className="  h-full border-r-2 border-[#f9f9f9d6]">
             <button
-              className="fixed p-4 flex mb-6 font-semibold text-center shadow-md  bottom-9 rounded-3xl bg-[#1D1D1D] right-3 "
+              className="fixed p-4 flex mb-6 font-semibold text-center shadow-md  bottom-9 rounded-3xl bg-[#1D1D1D] right-6 "
               onClick={() => setShow(!show)}
             >
               <span>
