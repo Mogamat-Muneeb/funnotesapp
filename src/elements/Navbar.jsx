@@ -5,8 +5,10 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function Navbar(props) {
+  const navigate = useNavigate();
   let username =
     props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
   const handleSignOut = () => {
@@ -14,7 +16,7 @@ function Navbar(props) {
       .then(() => {
         localStorage.removeItem("user");
         console.log("Signed Out");
-        // navigate("/");
+        navigate("/");
         window.location.reload();
       })
       .catch((err) => {

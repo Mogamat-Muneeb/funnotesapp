@@ -16,6 +16,7 @@ import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
 import { async } from "@firebase/util";
 import EditModal from "../Modal/EditModal";
+import Navbar from "./Navbar";
 const NoteDetail = () => {
   let { id } = useParams();
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -50,7 +51,9 @@ const NoteDetail = () => {
 
   return (
     <>
-    <div className="flex gap-4 px-4 pt-10 md:hidden ">
+    <div className="flex md:hidden ">
+    <Navbar verifiedUser={verifiedUser} />
+    <div className="flex gap-4 px-10 mt-24">
         <Link to="/">
         <BiArrowBack className="text-[25px]" />
         </Link>
@@ -59,6 +62,7 @@ const NoteDetail = () => {
             <p className="text-[16px]">{details.e}</p>
       {/* {date} */}
         </div>
+    </div>
     </div>
     <div className="hidden gap-4 px-10 pt-10 md:flex">
     <Link to="/">
