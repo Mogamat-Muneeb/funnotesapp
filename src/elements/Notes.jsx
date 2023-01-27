@@ -7,6 +7,7 @@ import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { FiLogOut } from "react-icons/fi";
+import { BiPencil } from "react-icons/bi";
 import {
   collection,
   addDoc,
@@ -18,7 +19,7 @@ import {
   query,
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
-import EditModal from "../Modal/Modal";
+import EditModal from "../Modal/EditModal";
 import { async } from "@firebase/util";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
@@ -29,6 +30,7 @@ function Notes(props) {
   const [verifiedUser, setVerifiedUser] = useState(storedUser);
   const store = JSON.parse(localStorage.getItem("Todo"));
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [dark, setDark] = useState(false);
   const currentUser = props.verifiedUser.email;
   const [notes, setNotes] = useState([]);
@@ -55,6 +57,8 @@ function Notes(props) {
   };
 
   const closeToggle = () => setShow(!show);
+  const closeToggleEdit = () => setShowEdit(!showEdit);
+  console.log(closeToggleEdit);
   const darkMode = () => {
     setDark((prev) => !prev);
   };
@@ -97,6 +101,13 @@ function Notes(props) {
     setDetails(data);
   };
 
+  const updateData = async (id, inputValue )=> {
+    console.log(inputValue ,  "the value of input");
+    const docRef = doc(db, "notes", currentUser, "user", id)
+    const payload = {e: inputValue}
+    setDoc(docRef, payload);
+  }
+
   const handleDelete = async (val) => {
     console.log(val.id);
     try {
@@ -129,6 +140,12 @@ function Notes(props) {
         onChange={handleChange}
         onClose={closeToggle}
         currentUser={currentUser}
+      />
+      <EditModal
+        onClose={closeToggleEdit}
+        showEdit={showEdit}
+        currentUser={currentUser}
+        onChange={updateData}
       />
       <div className="hidden h-full md:flex">
         <div className="">
@@ -170,13 +187,13 @@ function Notes(props) {
             details
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((val, id) => {
-                const date = new Date(
-                  val.createdAt.seconds * 1000
-                ).toLocaleDateString("default", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                });
+                // const date = new Date(
+                //   val.createdAt.seconds * 1000
+                // ).toLocaleDateString("default", {
+                //   day: "numeric",
+                //   month: "short",
+                //   year: "numeric",
+                // });
 
                 return (
                   <div
@@ -189,9 +206,12 @@ function Notes(props) {
                       <Link to={`/notes/${val.id}`}>Read More</Link>
                     </div>
                     <div className="flex items-end justify-between hull">
-                      <p className="text-[12px] font-medium"> {date}</p>
+                      {/* <p className="text-[12px] font-medium"> {date}</p> */}
                       <button className="" onClick={() => handleDelete(val)}>
                         <MdDelete className="" />
+                      </button>
+                      <button className="" >
+                        <BiPencil className="" />
                       </button>
                     </div>
                   </div>
@@ -224,13 +244,13 @@ function Notes(props) {
             details
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((val, id) => {
-                const date = new Date(
-                  val.createdAt.seconds * 1000
-                ).toLocaleDateString("default", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                });
+                // const date = new Date(
+                //   val.createdAt.seconds * 1000
+                // ).toLocaleDateString("default", {
+                //   day: "numeric",
+                //   month: "short",
+                //   year: "numeric",
+                // });
                 return (
                   <div
                     key={id}
@@ -242,9 +262,15 @@ function Notes(props) {
                       <Link to={`/notes/${val.id}`}>Read More</Link>
                     </div>
                     <div className="flex items-end justify-between hull">
-                      <p className="text-[12px] font-medium"> {date}</p>
+                      {/* <p className="text-[12px] font-medium"> {date}</p> */}
                       <button className="" onClick={() => handleDelete(val)}>
                         <MdDelete className="" />
+                      </button>
+                      {/* <button className="" onClick={() => {updateData(val.id)}} >
+                        <BiPencil className="" />
+                      </button> */}
+                      <button className="" onClick={() => setShowEdit(!showEdit)}>
+                        <BiPencil className="" />
                       </button>
                     </div>
                   </div>
