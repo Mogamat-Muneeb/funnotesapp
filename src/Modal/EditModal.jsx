@@ -1,13 +1,21 @@
+
+
 import React, { useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 
 
 
-const EditModal = ({ showEdit, onClose, onChange, currentUser }) => {
+const EditModal = ({ showEdit, onClose, onChange, currentUser , handleSubmit }) => {
   const [inputValue, setInputValue] = useState("");
-  const handleData = (event, currentUser) =>{
-    event.preventDefault();
-    }
+  // const handleData = (event, currentUser) =>{
+  //   event.preventDefault();
+  //   }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleSubmit(inputValue);
+    setInputValue("")
+  }
   return (
     <div
       className={`flex  justify-center items-center h-screen w-screen fixed top-0 left-0 overflow-hidden  bg-black bg-opacity-60 transition-opacity duration-300 z-[100]
@@ -49,7 +57,7 @@ const EditModal = ({ showEdit, onClose, onChange, currentUser }) => {
               </div>
             </div>
         </form> */}
-        <form  onSubmit={handleData}  className="block md:hidden">
+        <form  onSubmit={handleFormSubmit}  className="block md:hidden">
             <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
               <input
                 type="text"
@@ -64,12 +72,12 @@ const EditModal = ({ showEdit, onClose, onChange, currentUser }) => {
                 <button
                 type="submit"
                     className='bg-black text-white rounded h-[45px] w-[100px]  font-semibold'
-                    onClick={() => {
-                    if (inputValue.length!==0) {
-                      onChange(inputValue);
-                      setInputValue("");
-                    } 
-                  }}
+                  //   onClick={() => {
+                  //   if (inputValue.length!==0) {
+                  //     onChange(inputValue);
+                  //     setInputValue("");
+                  //   } 
+                  // }}
                 >
                   Add
                 </button>
@@ -81,4 +89,3 @@ const EditModal = ({ showEdit, onClose, onChange, currentUser }) => {
 };
 
 export default EditModal;
-

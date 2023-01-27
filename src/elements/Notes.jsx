@@ -89,6 +89,12 @@ function Notes(props) {
   };
 
   const [details, setDetails] = useState([]);
+  
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (e) => {
+      setInputValue(e.target.value);
+  }
 
   const userData = async () => {
     const q = query(collection(db, "notes", currentUser, "user"));
@@ -101,11 +107,21 @@ function Notes(props) {
     setDetails(data);
   };
 
+
+
+  
+  const handleEditSubmit = (inputValue, id) => {
+    // Pass the input value to the updateData function
+    updateData(id,inputValue);
+  };
+
+
   const updateData = async (id, inputValue )=> {
-    console.log(inputValue ,  "the value of input");
+
+    console.log(inputValue, " the value bro");
     const docRef = doc(db, "notes", currentUser, "user", id)
-    const payload = {e: inputValue}
-    setDoc(docRef, payload);
+    // const payload = {inputValue}
+    setDoc(docRef, inputValue);
   }
 
   const handleDelete = async (val) => {
@@ -146,6 +162,7 @@ function Notes(props) {
         showEdit={showEdit}
         currentUser={currentUser}
         onChange={updateData}
+        handleSubmit={handleEditSubmit}
       />
       <div className="hidden h-full md:flex">
         <div className="">

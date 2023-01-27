@@ -34,7 +34,7 @@ function App() {
   });
 
   let username = verifiedUser && verifiedUser.displayName.split(" ")[0];
-  console.log(verifiedUser, "verifiedUser");
+  // console.log(verifiedUser, "verifiedUser");
 
   useEffect(() => {
     localStorage.setItem("Todo", JSON.stringify(listItems));
@@ -50,7 +50,7 @@ function App() {
       .then((result) => {
         const user = result.user;
         setVerifiedUser(user);
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
