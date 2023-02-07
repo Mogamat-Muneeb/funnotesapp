@@ -258,7 +258,7 @@ function Notes(props) {
           <p className="text-3xl font-bold">
             {details.length > 0 ? "Notes" : ""}
           </p>
-          <p className="text-[12px] leading-3">
+          <p className="text-[12px] leading-3 mt-2">
 
             You have{" "}
             {details.length > 1
@@ -291,21 +291,18 @@ function Notes(props) {
                   >
                     <div className="h-full ">
                       <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
-                      <Link to={`/notes/${val.id}`}>Read More</Link>
+                      <Link to={`/notes/${val.id}`} className="text-[12px]">Read More</Link>
                     </div>
-                    <div className="flex items-end justify-between hull">
+                    <div className="flex items-end justify-end gap-2 ">
                       {/* <p className="text-[12px] font-medium"> {date}</p> */}
                       <button className="" onClick={() => handleDelete(val)}>
-                        <MdDelete className="" />
+                        <MdDelete />
                       </button>
-                      {/* <button className="" onClick={() => {updateData(val.id)}} >
-                        <BiPencil className="" />
-                      </button> */}
                       <button className="" onClick={() => {
                         setId(val.id)
                         setShowEdit(!showEdit)}
                         }>
-                        <BiPencil className="" />
+                        <BiPencil />
                       </button>
                     </div>
                   </div>
