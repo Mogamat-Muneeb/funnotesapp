@@ -7,9 +7,6 @@ import { VscChromeClose } from "react-icons/vsc";
 
 const EditModal = ({ showEdit, onClose, onChange, currentUser , handleSubmit }) => {
   const [inputValue, setInputValue] = useState("");
-  // const handleData = (event, currentUser) =>{
-  //   event.preventDefault();
-  //   }
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -28,35 +25,6 @@ const EditModal = ({ showEdit, onClose, onChange, currentUser , handleSubmit }) 
           <h2 className="font-bold text-[20px] text-[#1D1D1D]">Edit a  Note</h2>
           <button className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]" onClick={onClose}><VscChromeClose className="text-white" /></button>
         </div>
-        {/* <form onSubmit={handleData} className="hidden md:block">
-            <div className="flex flex-col gap-4 px-5 mt-5 ">
-              <div className="w-full m-auto ">
-              <input
-                type="text"
-                name=""
-                id=""
-                placeholder="What's happening?"
-                onChange={event => setInputValue(event.target.value)}
-                value={inputValue}
-                className='bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none'
-              />
-              </div>
-              <div className="">
-                <button
-                type="submit"
-                    className='bg-black text-white rounded h-[45px] w-[160px] mt-4 font-semibold'
-                    onClick={() => {
-                    if (inputValue.length!==0) {
-                      onChange(inputValue);
-                      setInputValue("");
-                    } 
-                  }}
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-        </form> */}
         <form  onSubmit={handleFormSubmit}  className="block md:hidden">
             <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
               <input
@@ -72,14 +40,8 @@ const EditModal = ({ showEdit, onClose, onChange, currentUser , handleSubmit }) 
                 <button
                 type="submit"
                     className='bg-black text-white rounded h-[45px] w-[100px]  font-semibold'
-                  //   onClick={() => {
-                  //   if (inputValue.length!==0) {
-                  //     onChange(inputValue);
-                  //     setInputValue("");
-                  //   } 
-                  // }}
                 >
-                  Add
+                  Update
                 </button>
             </div>
         </form>
