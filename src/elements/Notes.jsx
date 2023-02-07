@@ -64,7 +64,6 @@ function Notes(props) {
   const closeToggleEdit = () => {
     setShowEdit(!showEdit);
   }
-  console.log(closeToggleEdit);
   const darkMode = () => {
     setDark((prev) => !prev);
   };
@@ -86,7 +85,6 @@ function Notes(props) {
       .then(() => {
         localStorage.removeItem("user");
         console.log("Signed Out");
-        // navigate("/");
         window.location.reload();
       })
       .catch((err) => {
@@ -117,14 +115,11 @@ function Notes(props) {
 
 
   const updateData = async (inputValue, id )=> {
-    console.log(id,  "the id inside ");
-    console.log(inputValue, "the input inside")
     const docRef = doc(db, "notes", currentUser, "user",id)
     setDoc(docRef, {e: inputValue},  {merge: true});
   }
 
   const handleDelete = async (val) => {
-    console.log(val.id);
     try {
       await deleteDoc(doc(db, "notes", currentUser, "user", val.id));
       window.location.reload();
@@ -135,7 +130,6 @@ function Notes(props) {
 
   useEffect(() => {
     userData();
-    console.log(details, "detailsof");
   }, []);
 
   const [showFullText, setShowFullText] = useState(-1);
@@ -199,19 +193,32 @@ function Notes(props) {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-6 px-4 pt-10 gap-9">
+        <div className="flex flex-col">
+        <div className="px-8 pt-10 pb-10">
+          <p className="text-3xl font-bold">
+            {details.length > 0 ? "Notes" : ""}
+          </p>
+          <p className="text-[12px] leading-3">
+
+            You have{" "}
+            {details.length > 1
+              ? `${details.length} notes`
+              : `${details.length} note`}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3 px-8">
           {details &&
             details
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((val, id) => {
 
-                // const date = new Date(
-                //   val.createdAt.seconds * 1000
-                // ).toLocaleDateString("default", {
-                //   day: "numeric",
-                //   month: "short",
-                //   year: "numeric",
-                // });
+                const date = new Date(
+                  val.createdAt.seconds * 1000
+                ).toLocaleDateString("default", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                });
 
                 return (
                   <div
@@ -221,23 +228,27 @@ function Notes(props) {
                   >
                     <div className="h-full ">
                       <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
-                      <Link to={`/notes/${val.id}`}>Read More</Link>
+                      <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
                     </div>
-                    <div className="flex items-end justify-between hull">
-                      {/* <p className="text-[12px] font-medium"> {date}</p> */}
-                      <button className="" onClick={() => handleDelete(val)}>
-                        <MdDelete className="" />
-                      </button>
-                      <button className="" onClick={() => {
-                        setId(val.id)
-                        setShowEdit(!showEdit)}
-                        }>
-                        <BiPencil className="" />
-                      </button>
+                    <div className="flex justify-between gap-4">
+                      <p className="text-[12px] "> {date}</p>
+                      <div className="flex gap-2">
+                        <button className="" onClick={() => handleDelete(val)}>
+                          <MdDelete className="text-[14px]" />
+                        </button>
+                        <button className="" onClick={() => {
+                          setId(val.id)
+                          setShowEdit(!showEdit)}
+                          }>
+                          <BiPencil  className="text-[14px]" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
               })}
+
+        </div>
         </div>
       </div>
 
@@ -333,10 +344,6 @@ export default Notes;
 
 function EditModal({ showEdit, onClose, onChange, currentUser , handleSubmit, id }) {
   const [inputValue, setInputValue] = useState("");
-
-  console.log(id);
-
-  console.log(inputValue, "inputValue");
   const handleFormSubmit = (e) => {
     e.preventDefault();
     handleSubmit(inputValue, id);
