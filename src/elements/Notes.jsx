@@ -8,6 +8,7 @@ import { db } from "../services/firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { FiLogOut } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
+import { VscChromeClose } from "react-icons/vsc";
 import {
   collection,
   addDoc,
@@ -19,7 +20,7 @@ import {
   query,
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
-import EditModal from "../Modal/EditModal";
+// import EditModal from "../Modal/EditModal";
 import { async } from "@firebase/util";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
@@ -45,6 +46,7 @@ function Notes(props) {
     localStorage.setItem("Todo", JSON.stringify(listItems));
   }, [listItems]);
 
+  
   const handleChange = async (e) => {
     setListItems([...notes, e]);
     const collectionsRef = collection(db, "notes", currentUser, "user");
@@ -56,8 +58,12 @@ function Notes(props) {
     setShow(!show);
   };
 
+
+  const [id, setId] = useState(null)
   const closeToggle = () => setShow(!show);
-  const closeToggleEdit = () => setShowEdit(!showEdit);
+  const closeToggleEdit = () => {
+    setShowEdit(!showEdit);
+  }
   console.log(closeToggleEdit);
   const darkMode = () => {
     setDark((prev) => !prev);
@@ -98,7 +104,6 @@ function Notes(props) {
 
   const userData = async () => {
     const q = query(collection(db, "notes", currentUser, "user"));
-
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
@@ -109,19 +114,13 @@ function Notes(props) {
 
 
 
-  
-  const handleEditSubmit = (inputValue, id) => {
-    // Pass the input value to the updateData function
-    updateData(id,inputValue);
-  };
 
 
-  const updateData = async (id, inputValue )=> {
-
-    console.log(inputValue, " the value bro");
-    const docRef = doc(db, "notes", currentUser, "user", id)
-    // const payload = {inputValue}
-    setDoc(docRef, inputValue);
+  const updateData = async (inputValue, id )=> {
+    console.log(id,  "the id inside ");
+    console.log(inputValue, "the input inside")
+    const docRef = doc(db, "notes", currentUser, "user",id)
+    setDoc(docRef, {e: inputValue},  {merge: true});
   }
 
   const handleDelete = async (val) => {
@@ -162,7 +161,8 @@ function Notes(props) {
         showEdit={showEdit}
         currentUser={currentUser}
         onChange={updateData}
-        handleSubmit={handleEditSubmit}
+        handleSubmit={updateData}
+        id={id}
       />
       <div className="hidden h-full md:flex">
         <div className="">
@@ -204,6 +204,7 @@ function Notes(props) {
             details
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((val, id) => {
+
                 // const date = new Date(
                 //   val.createdAt.seconds * 1000
                 // ).toLocaleDateString("default", {
@@ -244,7 +245,7 @@ function Notes(props) {
             {details.length > 0 ? "Notes" : ""}
           </p>
           <p className="text-[12px] leading-3">
-            {" "}
+
             You have{" "}
             {details.length > 1
               ? `${details.length} notes`
@@ -286,7 +287,10 @@ function Notes(props) {
                       {/* <button className="" onClick={() => {updateData(val.id)}} >
                         <BiPencil className="" />
                       </button> */}
-                      <button className="" onClick={() => setShowEdit(!showEdit)}>
+                      <button className="" onClick={() => {
+                        setId(val.id)
+                        setShowEdit(!showEdit)}
+                        }>
                         <BiPencil className="" />
                       </button>
                     </div>
@@ -322,3 +326,52 @@ function Notes(props) {
   );
 }
 export default Notes;
+
+
+function EditModal({ showEdit, onClose, onChange, currentUser , handleSubmit, id }) {
+  const [inputValue, setInputValue] = useState("");
+
+  console.log(id);
+
+  console.log(inputValue, "inputValue");
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleSubmit(inputValue, id);
+    setInputValue("")
+  }
+  return (
+    <div
+      className={`flex  justify-center items-center h-screen w-screen fixed top-0 left-0 overflow-hidden  bg-black bg-opacity-60 transition-opacity duration-300 z-[100]
+         ${
+          showEdit ? "block" : "hidden"
+      }`}
+    >
+      <div className="bg-white  h-[200px] md:max-h-[400px]  w-full md:w-[517px] rounded-sm mx-4 md:mx-0 ">
+        <div className="flex items-center justify-between px-5 pt-2 ">
+          <h2 className="font-bold text-[20px] text-[#1D1D1D]">Edit a  Note</h2>
+          <button className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]" onClick={onClose}><VscChromeClose className="text-white" /></button>
+        </div>
+        <form  onSubmit={handleFormSubmit}  className="block md:hidden">
+            <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="What's happening?"
+                onChange={event => setInputValue(event.target.value)}
+                value={inputValue}
+                className='bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none'
+              />
+
+                <button
+                type="submit"
+                    className='bg-black text-white rounded h-[45px] w-[100px]  font-semibold'
+                >
+                  Update
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  );
+};
