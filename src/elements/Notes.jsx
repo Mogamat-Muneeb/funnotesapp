@@ -228,7 +228,10 @@ function Notes(props) {
                       <button className="" onClick={() => handleDelete(val)}>
                         <MdDelete className="" />
                       </button>
-                      <button className="" >
+                      <button className="" onClick={() => {
+                        setId(val.id)
+                        setShowEdit(!showEdit)}
+                        }>
                         <BiPencil className="" />
                       </button>
                     </div>
@@ -351,7 +354,7 @@ function EditModal({ showEdit, onClose, onChange, currentUser , handleSubmit, id
           <h2 className="font-bold text-[20px] text-[#1D1D1D]">Edit a  Note</h2>
           <button className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]" onClick={onClose}><VscChromeClose className="text-white" /></button>
         </div>
-        <form  onSubmit={handleFormSubmit}  className="block md:hidden">
+        <form  onSubmit={handleFormSubmit}  className="">
             <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
               <input
                 type="text"
