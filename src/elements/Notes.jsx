@@ -237,7 +237,7 @@ function Notes(props) {
                     style={{ backgroundColor: colors[id % colors.length] }}
                   >
                     <div className="h-full ">
-                      <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
+                      <p className="text-[14px]"> {val.e.slice(0, 170)}</p>
                       <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
                     </div>
                     <div className="flex justify-between gap-4">
@@ -257,7 +257,6 @@ function Notes(props) {
                   </div>
                 );
               })}
-
         </div>
         </div>
       </div>
