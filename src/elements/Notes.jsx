@@ -238,7 +238,10 @@ function Notes(props) {
                   >
                     <div className="h-full ">
                       <p className="text-[14px]"> {val.e.slice(0, 170)}</p>
-                      <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
+                      {/* <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link> */}
+                      {val.e.length > 170 && (
+  <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
+)}
                     </div>
                     <div className="flex justify-between gap-4">
                       <p className="text-[12px] "> {date}</p>
