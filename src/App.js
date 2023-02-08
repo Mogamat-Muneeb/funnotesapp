@@ -73,10 +73,11 @@ function App() {
   if (!verifiedUser) {
     return (
       <div className="flex content-center justify-center w-screen h-screen p-4">
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-4">
+        <img src="https://i.postimg.cc/MHchWw1t/Multi-device-targeting.gif" alt="" />
           <h1 className="text-2xl font-bold text-center">Fun Notes</h1>
           <button
-            className="bg-gradient-to-r from-[#021578] to-[#019AD9] text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
+            className="bg-[#1D1D1D]  text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
             onClick={() => signInWithGoogle()}
           >
             Get Started

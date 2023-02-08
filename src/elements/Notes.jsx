@@ -206,7 +206,7 @@ function Notes(props) {
         <div className="flex flex-col">
         <div className="px-8 pt-10 pb-10">
           <p className="text-3xl font-bold">
-            {details.length > 0 ? "Notes" : ""}
+          {details.length > 0 ? "Notes" : "Notes"}
           </p>
           <p className="text-[12px] leading-3">
 
@@ -266,13 +266,13 @@ function Notes(props) {
         <Navbar verifiedUser={verifiedUser} />
         <div className="px-8 pt-20">
           <p className="text-3xl font-bold">
-            {details.length > 0 ? "Notes" : ""}
+            {details.length > 0 ? "Notes" : "Notes"}
           </p>
           <p className="text-[12px] leading-3 mt-2">
 
             You have{" "}
             {details.length > 1
-              ? `${details.length} notes`
+              ? `${details.length } notes`
               : `${details.length} note`}
           </p>
         </div>
