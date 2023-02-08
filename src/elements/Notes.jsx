@@ -18,6 +18,7 @@ import {
   serverTimestamp,
   deleteDoc,
   query,
+  onSnapshot
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
 // import EditModal from "../Modal/EditModal";
@@ -115,8 +116,15 @@ function Notes(props) {
 
 
   const updateData = async (inputValue, id )=> {
-    const docRef = doc(db, "notes", currentUser, "user",id)
-    setDoc(docRef, {e: inputValue},  {merge: true});
+    try {
+          const docRef = doc(db, "notes", currentUser, "user",id)
+          await  setDoc(docRef, {e: inputValue},  {merge: true});
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
+    // const docRef = doc(db, "notes", currentUser, "user",id)
+    // setDoc(docRef, {e: inputValue},  {merge: true});
   }
 
   const handleDelete = async (val) => {
@@ -130,6 +138,8 @@ function Notes(props) {
 
   useEffect(() => {
     userData();
+    updateData();
+    handleDelete()
   }, []);
 
   const [showFullText, setShowFullText] = useState(-1);
