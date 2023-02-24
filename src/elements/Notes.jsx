@@ -18,7 +18,7 @@ import {
   serverTimestamp,
   deleteDoc,
   query,
-  onSnapshot
+  onSnapshot,
 } from "firebase/firestore";
 import Modal from "../Modal/Modal";
 // import EditModal from "../Modal/EditModal";
@@ -47,7 +47,6 @@ function Notes(props) {
     localStorage.setItem("Todo", JSON.stringify(listItems));
   }, [listItems]);
 
-  
   const handleChange = async (e) => {
     setListItems([...notes, e]);
     const collectionsRef = collection(db, "notes", currentUser, "user");
@@ -59,12 +58,11 @@ function Notes(props) {
     setShow(!show);
   };
 
-
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
   const closeToggle = () => setShow(!show);
   const closeToggleEdit = () => {
     setShowEdit(!showEdit);
-  }
+  };
   const darkMode = () => {
     setDark((prev) => !prev);
   };
@@ -94,12 +92,12 @@ function Notes(props) {
   };
 
   const [details, setDetails] = useState([]);
-  
+
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
-      setInputValue(e.target.value);
-  }
+    setInputValue(e.target.value);
+  };
 
   const userData = async () => {
     const q = query(collection(db, "notes", currentUser, "user"));
@@ -111,21 +109,18 @@ function Notes(props) {
     setDetails(data);
   };
 
-
-
-
-
-  const updateData = async (inputValue, id )=> {
+  console.log(details, " thee details");
+  const updateData = async (inputValue, id) => {
     try {
-          const docRef = doc(db, "notes", currentUser, "user",id)
-          await  setDoc(docRef, {e: inputValue},  {merge: true});
+      const docRef = doc(db, "notes", currentUser, "user", id);
+      await setDoc(docRef, { e: inputValue }, { merge: true });
       window.location.reload();
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
     // const docRef = doc(db, "notes", currentUser, "user",id)
     // setDoc(docRef, {e: inputValue},  {merge: true});
-  }
+  };
 
   const handleDelete = async (val) => {
     try {
@@ -139,7 +134,7 @@ function Notes(props) {
   useEffect(() => {
     userData();
     updateData();
-    handleDelete()
+    handleDelete();
   }, []);
 
   const [showFullText, setShowFullText] = useState(-1);
@@ -151,6 +146,22 @@ function Notes(props) {
   const handleReadLess = () => {
     setShowFullText(-1);
   };
+  // !details)
+
+  //     <div className="flex items-center justify-center h-screen ">
+  //     <div class="flex space-x-2">
+  //  <div aria-label="Loading..." role="status">
+  //    <svg class="h-7 w-7 animate-spin" viewBox="3 3 18 18">
+  //      <path
+  //        class="fill-[#14c4e1]"
+  //        d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+  //      <path
+  //        class="fill-gray-800"
+  //        d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+  //    </svg>
+  //  </div>
+  // </div>
+  // </div>
 
   return (
     <div className="w-screen h-screen">
@@ -203,64 +214,94 @@ function Notes(props) {
             </div>
           </div>
         </div>
+
         <div className="flex flex-col">
-        <div className="px-8 pt-10 pb-10">
-          <p className="text-3xl font-bold">
-          {details.length > 0 ? "Notes" : "Notes"}
-          </p>
-          <p className="text-[12px] leading-3">
+          <div className="px-8 pt-10 pb-10">
+            <p className="text-3xl font-bold">
+              {details.length > 0 ? "Notes" : "Notes"}
+            </p>
+            <p className="text-[12px] leading-3">
+              You have{" "}
+              {details.length > 1
+                ? `${details.length} notes`
+                : `${details.length} note`}
+            </p>
+          </div>
 
-            You have{" "}
-            {details.length > 1
-              ? `${details.length} notes`
-              : `${details.length} note`}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3 px-8">
-          {details &&
-            details
-              .sort((a, b) => b.createdAt - a.createdAt)
-              .map((val, id) => {
+          {!details.length ? (
+            <div className="flex items-center justify-center w-full ">
+              <div class="flex space-x-2">
+                <div aria-label="Loading..." role="status">
+                  <svg class="h-7 w-7 animate-spin" viewBox="3 3 18 18">
+                    <path
+                      class="fill-[#c6c6c6]"
+                      d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
+                    ></path>
+                    <path
+                      class="fill-[#1D1D1D]"
+                      d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
-                const date = new Date(
-                  val.createdAt.seconds * 1000
-                ).toLocaleDateString("default", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                });
+          <div className="flex flex-wrap gap-3 px-8">
+            {details &&
+              details
+                .sort((a, b) => b.createdAt - a.createdAt)
+                .map((val, id) => {
+                  const date = new Date(
+                    val.createdAt.seconds * 1000
+                  ).toLocaleDateString("default", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  });
 
-                return (
-                  <div
-                    key={id}
-                    className="flex flex-col p-2 rounded-md shadow-lg w-52 h-52"
-                    style={{ backgroundColor: colors[id % colors.length] }}
-                  >
-                    <div className="h-full ">
-                      <p className="text-[14px]"> {val.e.slice(0, 170)}</p>
-                      {/* <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link> */}
-                      {val.e.length > 170 && (
-  <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
-)}
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <p className="text-[12px] "> {date}</p>
-                      <div className="flex gap-2">
-                        <button className="" onClick={() => handleDelete(val)}>
-                          <MdDelete className="text-[14px]" />
-                        </button>
-                        <button className="" onClick={() => {
-                          setId(val.id)
-                          setShowEdit(!showEdit)}
-                          }>
-                          <BiPencil  className="text-[14px]" />
-                        </button>
+                  return (
+                    <div
+                      key={id}
+                      className="flex flex-col p-2 rounded-md shadow-lg w-52 h-52"
+                      style={{ backgroundColor: colors[id % colors.length] }}
+                    >
+                      <div className="h-full ">
+                        <p className="text-[14px]"> {val.e.slice(0, 100)}</p>
+                        {/* <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link> */}
+                        {val.e.length > 170 && (
+                          <Link
+                            to={`/notes/${val.id}`}
+                            className="text-[12px] leading-3"
+                          >
+                            Read More
+                          </Link>
+                        )}
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <p className="text-[12px] "> {date}</p>
+                        <div className="flex gap-2">
+                          <button
+                            className=""
+                            onClick={() => handleDelete(val)}
+                          >
+                            <MdDelete className="text-[14px]" />
+                          </button>
+                          <button
+                            className=""
+                            onClick={() => {
+                              setId(val.id);
+                              setShowEdit(!showEdit);
+                            }}
+                          >
+                            <BiPencil className="text-[14px]" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-        </div>
+                  );
+                })}
+          </div>
         </div>
       </div>
 
@@ -271,16 +312,17 @@ function Notes(props) {
             {details.length > 0 ? "Notes" : "Notes"}
           </p>
           <p className="text-[12px] leading-3 mt-2">
-
             You have{" "}
             {details.length > 1
-              ? `${details.length } notes`
+              ? `${details.length} notes`
               : `${details.length} note`}
           </p>
         </div>
         <div
           className={` gap-2 px-8 pt-5 ${
-            details.length > 0 ? "grid grid-cols-2 gap-2" : "flex justify-center"
+            details.length > 0
+              ? "grid grid-cols-2 gap-2"
+              : "flex justify-center"
           }`}
         >
           {details.length > 0 ? (
@@ -305,18 +347,26 @@ function Notes(props) {
                       <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
                       {/* <Link to={`/notes/${val.id}`} className="text-[12px]">Read More</Link> */}
                       {val.e.length > 170 && (
-  <Link to={`/notes/${val.id}`} className="text-[12px] leading-3">Read More</Link>
-)}
+                        <Link
+                          to={`/notes/${val.id}`}
+                          className="text-[12px] leading-3"
+                        >
+                          Read More
+                        </Link>
+                      )}
                     </div>
                     <div className="flex items-end justify-end gap-2 ">
                       {/* <p className="text-[12px] font-medium"> {date}</p> */}
                       <button className="" onClick={() => handleDelete(val)}>
                         <MdDelete />
                       </button>
-                      <button className="" onClick={() => {
-                        setId(val.id)
-                        setShowEdit(!showEdit)}
-                        }>
+                      <button
+                        className=""
+                        onClick={() => {
+                          setId(val.id);
+                          setShowEdit(!showEdit);
+                        }}
+                      >
                         <BiPencil />
                       </button>
                     </div>
@@ -325,6 +375,20 @@ function Notes(props) {
               })
           ) : (
             <div className="flex flex-col items-center justify-center text-white mt-96">
+              <div className="flex items-center justify-center w-full ">
+                  <div aria-label="Loading..." role="status">
+                    <svg class="h-7 w-7 animate-spin" viewBox="3 3 18 18">
+                      <path
+                        class="fill-[#c6c6c6]"
+                        d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
+                      ></path>
+                      <path
+                        class="fill-[#1D1D1D]"
+                        d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
+                      ></path>
+                    </svg>
+                  </div>
+              </div>
               <div className="flex flex-col items-center justify-center h-full m-auto">
                 <div>
                   <h1 className="text-xl font-bold text-black ">
@@ -353,47 +417,56 @@ function Notes(props) {
 }
 export default Notes;
 
-
-function EditModal({ showEdit, onClose, onChange, currentUser , handleSubmit, id }) {
+function EditModal({
+  showEdit,
+  onClose,
+  onChange,
+  currentUser,
+  handleSubmit,
+  id,
+}) {
   const [inputValue, setInputValue] = useState("");
   const handleFormSubmit = (e) => {
     e.preventDefault();
     handleSubmit(inputValue, id);
-    setInputValue("")
-  }
+    setInputValue("");
+  };
   return (
     <div
       className={`flex  justify-center items-center h-screen w-screen fixed top-0 left-0 overflow-hidden  bg-black bg-opacity-60 transition-opacity duration-300 z-[100]
-         ${
-          showEdit ? "block" : "hidden"
-      }`}
+         ${showEdit ? "block" : "hidden"}`}
     >
       <div className="bg-white  h-[200px] md:max-h-[400px]  w-full md:w-[517px] rounded-sm mx-4 md:mx-0 ">
         <div className="flex items-center justify-between px-5 pt-2 ">
-          <h2 className="font-bold text-[20px] text-[#1D1D1D]">Edit a  Note</h2>
-          <button className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]" onClick={onClose}><VscChromeClose className="text-white" /></button>
+          <h2 className="font-bold text-[20px] text-[#1D1D1D]">Edit a Note</h2>
+          <button
+            className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]"
+            onClick={onClose}
+          >
+            <VscChromeClose className="text-white" />
+          </button>
         </div>
-        <form  onSubmit={handleFormSubmit}  className="">
-            <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
-              <input
-                type="text"
-                name=""
-                id=""
-                placeholder="What's happening?"
-                onChange={event => setInputValue(event.target.value)}
-                value={inputValue}
-                className='bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none'
-              />
+        <form onSubmit={handleFormSubmit} className="">
+          <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="What's happening?"
+              onChange={(event) => setInputValue(event.target.value)}
+              value={inputValue}
+              className="bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none"
+            />
 
-                <button
-                type="submit"
-                    className='bg-black text-white rounded h-[45px] w-[100px]  font-semibold'
-                >
-                  Update
-                </button>
-            </div>
+            <button
+              type="submit"
+              className="bg-black text-white rounded h-[45px] w-[100px]  font-semibold"
+            >
+              Update
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
-};
+}
