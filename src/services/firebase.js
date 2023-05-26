@@ -3,13 +3,13 @@ import {getAuth} from 'firebase/auth'
 import {getFirestore} from 'firebase/firestore';
 import {getStorage} from 'firebase/storage';
 const firebaseConfig = {
-  apiKey: "AIzaSyDhpO3JsMjjJun6mEnGw_dgJvpUBOBZN4A",
-  authDomain: "funnotesapp.firebaseapp.com",
-  projectId: "funnotesapp",
-  storageBucket: "funnotesapp.appspot.com",
-  messagingSenderId: "493841646276",
-  appId: "1:493841646276:web:678f12524697aa4349ff91",
-  measurementId: "G-52GY0KNXQZ"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 
