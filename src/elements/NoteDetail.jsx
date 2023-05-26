@@ -38,7 +38,7 @@ const NoteDetail = () => {
     fetchData();
   }, [id, currentUser]);
 
-  // console.log(details, "de");
+  // console.log(details.e, "de");
   // const createdAt1 = details.createdAt.seconds * 1000
   // console.log(createdAt1, "yes man");
   // const date = new Date(
@@ -48,7 +48,6 @@ const NoteDetail = () => {
   //     month: "short",
   //     year: "numeric",
   //   });
-
   return (
     <>
     <div className="flex md:hidden ">
@@ -58,7 +57,7 @@ const NoteDetail = () => {
         <BiArrowBack className="text-[25px]" />
         </Link>
         <div className="flex flex-col">
-            {/* <p className="text-lg font-bold">Note Name : {details.e.slice(0, 60)}</p> */}
+            {/* <p className="text-lg font-bold">Note Name : {name}</p> */}
             <p className="text-[16px]">{details.e}</p>
       {/* {date} */}
         </div>
