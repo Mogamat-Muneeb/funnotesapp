@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FiEdit2 } from "react-icons/fi";
-import { MdDelete } from "react-icons/md";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +12,6 @@ function Navbar(props) {
     signOut(auth)
       .then(() => {
         localStorage.removeItem("user");
-        console.log("Signed Out");
         navigate("/");
         window.location.reload();
       })
@@ -48,7 +44,7 @@ function Navbar(props) {
             onClick={handleSignOut}
             className="font-normal text-[14px] text-white cursor-pointer flex items-center gap-1"
           >
-            <FiLogOut className="font-normal"/>
+            <FiLogOut className="font-normal" />
             Logout
           </button>
         </div>

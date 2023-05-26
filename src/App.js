@@ -9,8 +9,6 @@ import NoteDetail from "../src/elements/NoteDetail";
 function App() {
   auth.languageCode = "it";
   const provider = new GoogleAuthProvider();
-  const [dark, setDark] = useState(false);
-  let [show, setShow] = useState(false);
   const store = JSON.parse(localStorage.getItem("Todo"));
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const [verifiedUser, setVerifiedUser] = useState(storedUser);
@@ -36,25 +34,12 @@ function App() {
       .then((result) => {
         const user = result.user;
         setVerifiedUser(user);
-        // console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
         console.log(error, errorCode);
       });
   };
-
-  let handleChange = (e) => {
-    setListItems([...listItems, e]);
-    setShow(!show);
-  };
-  let closeToggle = () => setShow(!show);
-
-  let darkMode = () => {
-    setDark((prev) => !prev);
-  };
-
-  // console.log(verifiedUser);
 
   if (!verifiedUser) {
     return (
@@ -80,25 +65,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/notes/:id" element={<NoteDetail />} />
-
         <Route path="/" element={<Notes verifiedUser={verifiedUser} />} />
-        {/* <div className={` ${dark ? "dark" : ""}   `}>
-          <div className=""> */}
-        {/* <Navbar verifiedUser={verifiedUser}/> */}
-        {/* <div className="w-screen h-screen"> */}
-
-        {/* </div> */}
-        {/* </div>
-        </div> */}
-
-        {/* <div className={` ${dark ? "dark" : ""}   `}>
-      <div className="">
-        <Navbar verifiedUser={verifiedUser}/>
-        <div className="w-screen h-screen">
-          <Notes verifiedUser={verifiedUser} />
-        </div>
-      </div>
-    </div> */}
       </Routes>
     </Router>
   );

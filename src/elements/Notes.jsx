@@ -50,7 +50,6 @@ function Notes(props) {
       createdAt: serverTimestamp(),
     });
     // window.location.reload();
-    console.log("ayy my boii");
     setShow(!show);
   };
 
@@ -72,7 +71,6 @@ function Notes(props) {
     signOut(auth)
       .then(() => {
         localStorage.removeItem("user");
-        console.log("Signed Out");
         window.location.reload();
       })
       .catch((err) => {
@@ -117,17 +115,15 @@ function Notes(props) {
     try {
       const docRef = doc(db, "notes", currentUser, "user", id);
       await setDoc(docRef, { e: inputValue }, { merge: true });
-      // window.location.reload();
       setShowEdit(!showEdit);
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error("Error updating document: ", error);
     }
   };
 
   const handleDelete = async (val) => {
     try {
-      await deleteDoc(doc(db, "notes", currentUser, "user", val.id));
-      // window.location.reload();
+      await deleteDoc(doc(db, "notes", currentUser, "user", val?.id));
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
@@ -138,16 +134,6 @@ function Notes(props) {
     updateData();
     handleDelete();
   }, []);
-
-  const [showFullText, setShowFullText] = useState(-1);
-
-  const handleReadMore = (index) => {
-    setShowFullText(index);
-  };
-
-  const handleReadLess = () => {
-    setShowFullText(-1);
-  };
 
   return (
     <div className="w-screen h-screen">
@@ -216,7 +202,7 @@ function Notes(props) {
 
           {!details.length ? (
             <div className="flex items-center justify-center w-full ">
-              <div class="flex space-x-2">
+              <div className="flex space-x-2">
                 <Loader />
               </div>
             </div>
@@ -246,7 +232,7 @@ function Notes(props) {
                     >
                       <div className="h-full">
                         <p className="text-[14px]"> {val.e.slice(0, 100)}</p>
-                        {val.e.length > 170 && (
+                        {val.e.length > 120 && (
                           <Link
                             to={`/notes/${val.id}`}
                             className="text-[12px] leading-3"
@@ -315,7 +301,7 @@ function Notes(props) {
                   >
                     <div className="h-full ">
                       <p className="text-[14px]"> {val.e.slice(0, 30)}</p>
-                      {val.e.length > 170 && (
+                      {val.e.length > 120 && (
                         <Link
                           to={`/notes/${val.id}`}
                           className="text-[12px] leading-3"
