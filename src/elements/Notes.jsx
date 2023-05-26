@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { FiEdit2 } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { FiPlus } from "react-icons/fi";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { db } from "../services/firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { FiLogOut } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
 import {
   collection,
   addDoc,
-  getDocs,
   doc,
   setDoc,
   serverTimestamp,
@@ -20,14 +17,12 @@ import {
   query,
   onSnapshot,
 } from "firebase/firestore";
-import Modal from "../Modal/Modal";
-// import EditModal from "../Modal/EditModal";
-import { async } from "@firebase/util";
+// import Modal from "../Modal/Modal";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
+import { Loader } from "./Icons";
 function Notes(props) {
   auth.languageCode = "it";
-  const provider = new GoogleAuthProvider();
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const [verifiedUser, setVerifiedUser] = useState(storedUser);
   const store = JSON.parse(localStorage.getItem("Todo"));
@@ -46,7 +41,7 @@ function Notes(props) {
   useEffect(() => {
     localStorage.setItem("Todo", JSON.stringify(listItems));
   }, [listItems]);
-  
+
   const handleChange = async (e) => {
     setListItems([...notes, e]);
     const collectionsRef = collection(db, "notes", currentUser, "user");
@@ -54,7 +49,8 @@ function Notes(props) {
       e,
       createdAt: serverTimestamp(),
     });
-    window.location.reload();
+    // window.location.reload();
+    console.log("ayy my boii");
     setShow(!show);
   };
 
@@ -62,9 +58,6 @@ function Notes(props) {
   const closeToggle = () => setShow(!show);
   const closeToggleEdit = () => {
     setShowEdit(!showEdit);
-  };
-  const darkMode = () => {
-    setDark((prev) => !prev);
   };
 
   const colors = [
@@ -75,10 +68,6 @@ function Notes(props) {
     "#e4f693",
     "#17e2f4",
   ];
-
-  let username =
-    props.verifiedUser && props.verifiedUser.displayName.split(" ")[0];
-
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -101,20 +90,35 @@ function Notes(props) {
 
   const userData = async () => {
     const q = query(collection(db, "notes", currentUser, "user"));
-    const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    setDetails(data);
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const data = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setDetails(data);
+    });
+    return unsubscribe;
   };
 
-  console.log(details, " thee details");
+  useEffect(() => {
+    let unsubscribe;
+    const fetchData = async () => {
+      unsubscribe = await userData();
+    };
+    fetchData();
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []);
+
   const updateData = async (inputValue, id) => {
     try {
       const docRef = doc(db, "notes", currentUser, "user", id);
       await setDoc(docRef, { e: inputValue }, { merge: true });
-      window.location.reload();
+      // window.location.reload();
+      setShowEdit(!showEdit);
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
@@ -123,7 +127,7 @@ function Notes(props) {
   const handleDelete = async (val) => {
     try {
       await deleteDoc(doc(db, "notes", currentUser, "user", val.id));
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
@@ -213,18 +217,7 @@ function Notes(props) {
           {!details.length ? (
             <div className="flex items-center justify-center w-full ">
               <div class="flex space-x-2">
-                <div aria-label="Loading..." role="status">
-                  <svg class="h-7 w-7 animate-spin" viewBox="3 3 18 18">
-                    <path
-                      class="fill-[#c6c6c6]"
-                      d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
-                    ></path>
-                    <path
-                      class="fill-[#1D1D1D]"
-                      d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
-                    ></path>
-                  </svg>
-                </div>
+                <Loader />
               </div>
             </div>
           ) : null}
@@ -234,13 +227,16 @@ function Notes(props) {
               details
                 .sort((a, b) => b.createdAt - a.createdAt)
                 .map((val, id) => {
-                  const date = new Date(
-                    val.createdAt.seconds * 1000
-                  ).toLocaleDateString("default", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  });
+                  const date = val.createdAt
+                    ? new Date(val.createdAt.seconds * 1000).toLocaleDateString(
+                        "default",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        }
+                      )
+                    : "";
 
                   return (
                     <div
@@ -248,7 +244,7 @@ function Notes(props) {
                       className="flex flex-col p-2 rounded-md shadow-lg w-52 h-52"
                       style={{ backgroundColor: colors[id % colors.length] }}
                     >
-                      <div className="h-full ">
+                      <div className="h-full">
                         <p className="text-[14px]"> {val.e.slice(0, 100)}</p>
                         {val.e.length > 170 && (
                           <Link
@@ -260,7 +256,7 @@ function Notes(props) {
                         )}
                       </div>
                       <div className="flex justify-between gap-4">
-                        <p className="text-[12px] "> {date}</p>
+                        <p className="text-[12px]"> {date}</p>
                         <div className="flex gap-2">
                           <button
                             className=""
@@ -348,18 +344,9 @@ function Notes(props) {
           ) : (
             <div className="flex flex-col items-center justify-center text-white mt-96">
               <div className="flex items-center justify-center w-full ">
-                  <div aria-label="Loading..." role="status">
-                    <svg class="h-7 w-7 animate-spin" viewBox="3 3 18 18">
-                      <path
-                        class="fill-[#c6c6c6]"
-                        d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
-                      ></path>
-                      <path
-                        class="fill-[#1D1D1D]"
-                        d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
-                      ></path>
-                    </svg>
-                  </div>
+                <div aria-label="Loading..." role="status">
+                  <Loader />
+                </div>
               </div>
               <div className="flex flex-col items-center justify-center h-full m-auto">
                 <div>
@@ -389,14 +376,7 @@ function Notes(props) {
 }
 export default Notes;
 
-function EditModal({
-  showEdit,
-  onClose,
-  onChange,
-  currentUser,
-  handleSubmit,
-  id,
-}) {
+function EditModal({ showEdit, onClose, handleSubmit, id }) {
   const [inputValue, setInputValue] = useState("");
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -438,6 +418,89 @@ function EditModal({
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+}
+
+function Modal({ show, onChange, onClose, currentUser }) {
+  const [inputValue, setInputValue] = useState("");
+  const handleData = (event, currentUser) => {
+    event.preventDefault();
+  };
+
+  return (
+    <div className="">
+      <div
+        className={`flex  justify-center items-center h-screen w-screen fixed top-0 left-0 overflow-hidden  bg-black bg-opacity-60 transition-opacity duration-300 z-[100]
+         ${show ? "block" : "hidden"}`}
+      >
+        <div className="bg-white  h-[200px] md:max-h-[400px]  w-full md:w-[517px] rounded-sm mx-4 md:mx-0 ">
+          <div className="flex items-center justify-between px-5 pt-2 ">
+            <h2 className="font-bold text-[20px] text-[#1D1D1D]">Add a Note</h2>
+            <button
+              className="flex items-center justify-center p-2 rounded-full shadow-md text-white bg-[#1D1D1D]"
+              onClick={onClose}
+            >
+              <VscChromeClose className="text-white" />
+            </button>
+          </div>
+          <form onSubmit={handleData} className="hidden md:block">
+            <div className="flex flex-col gap-4 px-5 mt-5 ">
+              <div className="w-full m-auto ">
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="What's happening?"
+                  onChange={(event) => setInputValue(event.target.value)}
+                  value={inputValue}
+                  className="bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none"
+                />
+              </div>
+              <div className="">
+                <button
+                  type="submit"
+                  className="bg-black text-white rounded h-[45px] w-[160px] mt-4 font-semibold"
+                  onClick={() => {
+                    if (inputValue.length !== 0) {
+                      onChange(inputValue);
+                      setInputValue("");
+                    }
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </form>
+          <form onSubmit={handleData} className="block md:hidden">
+            <div className="flex items-center justify-center gap-4 px-5 mt-12 ">
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="What's happening?"
+                onChange={(event) => setInputValue(event.target.value)}
+                value={inputValue}
+                className="bg-gray-200 border rounded-sm w-full pl-2 h-[45px] text-black focus:outline-none"
+              />
+
+              <button
+                type="submit"
+                className="bg-black text-white rounded h-[45px] w-[100px]  font-semibold"
+                onClick={() => {
+                  if (inputValue.length !== 0) {
+                    onChange(inputValue);
+                    setInputValue("");
+                  }
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
